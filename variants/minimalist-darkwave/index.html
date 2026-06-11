@@ -31,6 +31,26 @@
     overflow-x: hidden;
   }
 
+  /* Ambient radial glow — slow breathing pulse */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 25%, rgba(255,255,255,0.07) 0%, transparent 70%),
+      radial-gradient(ellipse 30% 25% at 20% 60%, rgba(255,255,255,0.03) 0%, transparent 65%),
+      radial-gradient(ellipse 35% 30% at 75% 55%, rgba(255,255,255,0.025) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 0;
+    animation: ambientBreath 14s ease-in-out infinite;
+  }
+
+  @keyframes ambientBreath {
+    0%, 100% { opacity: 0.6; }
+    33% { opacity: 1; }
+    66% { opacity: 0.5; }
+  }
+
   /* Ultra-subtle grain texture */
   body::before {
     content: '';
@@ -42,9 +62,21 @@
     z-index: 0;
   }
 
+  /* Minimalist circuit trace — subtle geometric lines */
+  .circuit-trace {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.05;
+    background-image:
+      url("data:image/svg+xml,%3Csvg width='400' height='400' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 120 h100 v60 h-30 v80 h160 v-40' stroke='white' fill='none' stroke-width='0.5' /%3E%3Cpath d='M320 100 v100 h-60 v40 h-100' stroke='white' fill='none' stroke-width='0.5' /%3E%3Cpath d='M60 280 h80 v-40 h120 v60 h-40' stroke='white' fill='none' stroke-width='0.5' /%3E%3Ccircle cx='40' cy='120' r='1.5' fill='white' /%3E%3Ccircle cx='140' cy='180' r='1.5' fill='white' /%3E%3Ccircle cx='300' cy='260' r='1.5' fill='white' /%3E%3Ccircle cx='320' cy='100' r='1.5' fill='white' /%3E%3Ccircle cx='200' cy='300' r='1.5' fill='white' /%3E%3Ccircle cx='60' cy='280' r='1.5' fill='white' /%3E%3C/svg%3E");
+    background-size: 400px 400px;
+  }
+
   .container {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     max-width: 800px;
     margin: 0 auto;
     padding: 4rem 2rem;
@@ -314,43 +346,51 @@
     margin-bottom: 1.5rem;
   }
 
-  /* Track selector tabs (carousel) */
-  .track-tabs {
+  /* Carousel navigation */
+  .carousel-nav {
     display: flex;
+    align-items: center;
+    justify-content: center;
     gap: 0;
-    margin-bottom: 1.2rem;
+    margin-bottom: 0.8rem;
   }
-  .track-tab {
+  .carousel-arrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    background: none;
+    border: 1px solid var(--border);
+    padding: 0.35rem 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    line-height: 1;
+    user-select: none;
+  }
+  .carousel-arrow:hover {
+    color: var(--text-primary);
+    border-color: rgba(255,255,255,0.18);
+    background: var(--hover);
+  }
+  .carousel-arrow:active {
+    color: var(--text-primary);
+    background: rgba(255,255,255,0.06);
+  }
+  .carousel-arrow-left {
+    border-right: none;
+  }
+  .carousel-arrow-right {
+    border-left: none;
+  }
+  .carousel-indicator {
     font-family: 'Space Mono', monospace;
     font-size: 0.55rem;
     color: var(--text-dim);
+    letter-spacing: 0.2em;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
-    background: none;
-    border: 1px solid var(--border);
-    border-bottom: none;
-    padding: 0.5rem 1.2rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-  }
-  .track-tab:hover {
-    color: var(--text-secondary);
-  }
-  .track-tab.active {
-    color: var(--text-primary);
-    border-color: rgba(255,255,255,0.2);
-    background: rgba(255,255,255,0.03);
-  }
-  .track-tab.active::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: var(--text-primary);
-    opacity: 0.5;
+    padding: 0.35rem 1.2rem;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    user-select: none;
   }
 
   /* Minimal player */
@@ -474,39 +514,6 @@
     border-radius: 1px;
   }
 
-  /* ========== TECH GRID ========== */
-  .tech-list {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0;
-  }
-  .tech-item {
-    padding: 0.8rem 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .tech-item:nth-child(odd) {
-    padding-right: 1.5rem;
-  }
-  .tech-item:nth-child(even) {
-    padding-left: 1.5rem;
-    border-left: 1px solid var(--border);
-  }
-
-  .tech-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.55rem;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-    display: block;
-    margin-bottom: 0.3rem;
-  }
-  .tech-value {
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-    font-weight: 300;
-  }
-
   /* ========== CONTACTS ========== */
   .contacts-row {
     display: flex;
@@ -571,13 +578,12 @@
     .work-cover { width: 100%; height: auto; max-width: 250px; }
     .new-release-inner { grid-template-columns: 1fr; }
     .new-release-cover { width: 100%; height: auto; max-width: 200px; }
-    .tech-list { grid-template-columns: 1fr; }
-    .tech-item:nth-child(even) { border-left: none; padding-left: 0; }
-    .tech-item:nth-child(odd) { padding-right: 0; }
+    .carousel-nav { justify-content: center; }
   }
 </style>
 </head>
 <body>
+  <div class="circuit-trace"></div>
   <div class="container">
 
     <!-- HERO -->
@@ -626,10 +632,11 @@
       <div class="section-label">работы</div>
       <h2>Дискография</h2>
 
-      <!-- Track tabs -->
-      <div class="track-tabs">
-        <button class="track-tab active" data-track="0" id="tab0">Dark Ages</button>
-        <button class="track-tab" data-track="1" id="tab1">Surrender</button>
+      <!-- Carousel navigation -->
+      <div class="carousel-nav">
+        <button class="carousel-arrow carousel-arrow-left" id="carouselPrev" aria-label="Предыдущий трек">←</button>
+        <span class="carousel-indicator" id="carouselIndicator">1 / 2</span>
+        <button class="carousel-arrow carousel-arrow-right" id="carouselNext" aria-label="Следующий трек">→</button>
       </div>
 
       <div class="work-card" id="workCard">
@@ -662,49 +669,6 @@
       </div>
     </section>
 
-    <!-- TECH -->
-    <section class="section">
-      <div class="section-label">технологии & инструменты</div>
-      <h2>Стек</h2>
-      <p>
-        Технологии для меня — не просто инструмент, а способ мышления.
-        Код как партитура, процессор как оркестр.
-      </p>
-      <div class="tech-list">
-        <div class="tech-item">
-          <span class="tech-label">синтезаторы</span>
-          <span class="tech-value">Serum, Vital, Pigments</span>
-        </div>
-        <div class="tech-item">
-          <span class="tech-label">гитара</span>
-          <span class="tech-value">Neural DSP, Line 6 Helix</span>
-        </div>
-        <div class="tech-item">
-          <span class="tech-label">daw</span>
-          <span class="tech-value">Ableton Live, Logic Pro, Reaper</span>
-        </div>
-        <div class="tech-item">
-          <span class="tech-label">оркестр</span>
-          <span class="tech-value">Spitfire, Orchestral Tools</span>
-        </div>
-        <div class="tech-item">
-          <span class="tech-label">инструменты</span>
-          <span class="tech-value">Фортепиано, гитара акустическая / электро</span>
-        </div>
-        <div class="tech-item">
-          <span class="tech-label">технологии</span>
-          <span class="tech-value">Python, Docker, Linux, автоматизации</span>
-        </div>
-        <div class="tech-item">
-          <span class="tech-label">железо</span>
-          <span class="tech-value">Custom builds, серверы, аудио-интерфейсы</span>
-        </div>
-        <div class="tech-item">
-          <!-- placeholder for grid alignment -->
-        </div>
-      </div>
-    </section>
-
     <!-- CONTACTS -->
     <section class="section">
       <div class="section-label">связь</div>
@@ -731,7 +695,7 @@
   </audio>
 
   <script>
-    // Track data
+    // Track data — add more entries here for new works
     const tracks = [
       {
         title: 'Dark Ages',
@@ -764,6 +728,7 @@
     const workTitle = document.getElementById('workTitle');
     const workMeta = document.getElementById('workMeta');
     const trackNameEl = document.getElementById('trackName');
+    const carouselIndicator = document.getElementById('carouselIndicator');
 
     function fmt(t) {
       const m = Math.floor(t / 60);
@@ -831,7 +796,6 @@
 
     // Init volume
     currentAudio.volume = volumeSlider.value / 100;
-    // Also init second audio volume (will be synced on switch)
     document.getElementById('audio1').volume = volumeSlider.value / 100;
 
     progressBar.addEventListener('click', (e) => {
@@ -849,12 +813,8 @@
       }
     }
 
-    // Pause all audios helper
-    function pauseAll() {
-      document.querySelectorAll('audio').forEach(a => {
-        a.pause();
-        a.currentTime = a.currentTime; // keep position but pause
-      });
+    function updateIndicator() {
+      carouselIndicator.textContent = (currentTrack + 1) + ' / ' + tracks.length;
     }
 
     // Carousel switching
@@ -885,14 +845,19 @@
       // Bind events
       bindAudio(currentAudio);
 
-      // Update tabs
-      document.querySelectorAll('.track-tab').forEach(t => t.classList.remove('active'));
-      document.getElementById('tab' + index).classList.add('active');
+      updateIndicator();
     }
 
-    // Tab click handlers
-    document.getElementById('tab0').addEventListener('click', () => switchTrack(0));
-    document.getElementById('tab1').addEventListener('click', () => switchTrack(1));
+    function nextTrack() {
+      switchTrack((currentTrack + 1) % tracks.length);
+    }
+
+    function prevTrack() {
+      switchTrack((currentTrack - 1 + tracks.length) % tracks.length);
+    }
+
+    document.getElementById('carouselPrev').addEventListener('click', prevTrack);
+    document.getElementById('carouselNext').addEventListener('click', nextTrack);
   </script>
 </body>
 </html>
