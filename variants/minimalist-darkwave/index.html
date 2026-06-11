@@ -9,15 +9,77 @@
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+  /* ============================================
+     BASE VARIABLES (default = white / no accent)
+     ============================================ */
   :root {
     --bg: #000000;
     --text-primary: #e0e0e0;
     --text-secondary: #707070;
     --text-dim: #3a3a3a;
     --border: rgba(255,255,255,0.06);
+    --hover-bg: rgba(255,255,255,0.04);
     --accent: #ffffff;
-    --wave-color: #1a1a1a;
-    --hover: rgba(255,255,255,0.04);
+    --accent-rgb: 255,255,255;
+    --accent-secondary: #ffffff;
+    --accent-secondary-rgb: 255,255,255;
+    --glow-color-1: rgba(255,255,255,0.07);
+    --glow-color-2: rgba(255,255,255,0.03);
+    --glow-color-3: rgba(255,255,255,0.025);
+    --badge-bg: rgba(255,255,255,0.08);
+    --badge-text: var(--text-primary);
+  }
+
+  /* ---- THEME: Gold (оркестровое тепло) ---- */
+  .theme-gold {
+    --accent: #c9a44b;
+    --accent-rgb: 201,164,75;
+    --accent-secondary: #c9a44b;
+    --accent-secondary-rgb: 201,164,75;
+    --glow-color-1: rgba(201,164,75,0.09);
+    --glow-color-2: rgba(201,164,75,0.04);
+    --glow-color-3: rgba(201,164,75,0.03);
+    --badge-bg: rgba(201,164,75,0.12);
+    --badge-text: #d4b65a;
+  }
+
+  /* ---- THEME: Crimson (dark fantasy / алая рана) ---- */
+  .theme-crimson {
+    --accent: #b8455a;
+    --accent-rgb: 184,69,90;
+    --accent-secondary: #b8455a;
+    --accent-secondary-rgb: 184,69,90;
+    --glow-color-1: rgba(184,69,90,0.09);
+    --glow-color-2: rgba(184,69,90,0.04);
+    --glow-color-3: rgba(184,69,90,0.03);
+    --badge-bg: rgba(184,69,90,0.14);
+    --badge-text: #d47080;
+  }
+
+  /* ---- THEME: Teal (техно-бирюза / cyberpunk) ---- */
+  .theme-teal {
+    --accent: #3d9e9e;
+    --accent-rgb: 61,158,158;
+    --accent-secondary: #3d9e9e;
+    --accent-secondary-rgb: 61,158,158;
+    --glow-color-1: rgba(61,158,158,0.09);
+    --glow-color-2: rgba(61,158,158,0.04);
+    --glow-color-3: rgba(61,158,158,0.03);
+    --badge-bg: rgba(61,158,158,0.12);
+    --badge-text: #5cc0c0;
+  }
+
+  /* ---- THEME: Duo (Crimson + Gold) ---- */
+  .theme-duo {
+    --accent: #b8455a;
+    --accent-rgb: 184,69,90;
+    --accent-secondary: #c9a44b;
+    --accent-secondary-rgb: 201,164,75;
+    --glow-color-1: rgba(184,69,90,0.07);
+    --glow-color-2: rgba(201,164,75,0.04);
+    --glow-color-3: rgba(184,69,90,0.03);
+    --badge-bg: rgba(184,69,90,0.14);
+    --badge-text: #d47080;
   }
 
   body {
@@ -37,9 +99,9 @@
     position: fixed;
     inset: 0;
     background:
-      radial-gradient(ellipse 60% 50% at 50% 25%, rgba(255,255,255,0.07) 0%, transparent 70%),
-      radial-gradient(ellipse 30% 25% at 20% 60%, rgba(255,255,255,0.03) 0%, transparent 65%),
-      radial-gradient(ellipse 35% 30% at 75% 55%, rgba(255,255,255,0.025) 0%, transparent 65%);
+      radial-gradient(ellipse 60% 50% at 50% 25%, var(--glow-color-1) 0%, transparent 70%),
+      radial-gradient(ellipse 30% 25% at 20% 60%, var(--glow-color-2) 0%, transparent 65%),
+      radial-gradient(ellipse 35% 30% at 75% 55%, var(--glow-color-3) 0%, transparent 65%);
     pointer-events: none;
     z-index: 0;
     animation: ambientBreath 14s ease-in-out infinite;
@@ -102,14 +164,15 @@
 
   .hero h1 span {
     font-weight: 600;
+    color: var(--accent);
   }
 
   .hero-divider {
     width: 40px;
     height: 1px;
-    background: var(--text-secondary);
+    background: var(--accent);
     margin: 0 auto 1.5rem;
-    opacity: 0.5;
+    opacity: 0.6;
   }
 
   .hero-quote {
@@ -146,7 +209,7 @@
   }
   .profile-img-container:hover {
     filter: grayscale(0.6) brightness(0.9);
-    border-color: rgba(255,255,255,0.15);
+    border-color: var(--accent);
   }
 
   .profile-img {
@@ -167,7 +230,7 @@
   .profile-text .profile-role {
     font-family: 'Space Mono', monospace;
     font-size: 0.6rem;
-    color: var(--text-dim);
+    color: var(--accent);
     text-transform: uppercase;
     letter-spacing: 0.2em;
   }
@@ -188,7 +251,7 @@
   .section-label {
     font-family: 'Space Mono', monospace;
     font-size: 0.6rem;
-    color: var(--text-dim);
+    color: var(--accent);
     text-transform: uppercase;
     letter-spacing: 0.3em;
     margin-bottom: 1.5rem;
@@ -200,7 +263,8 @@
     content: '';
     flex: 1;
     height: 1px;
-    background: var(--border);
+    background: var(--accent);
+    opacity: 0.25;
   }
 
   .section h2 {
@@ -221,7 +285,7 @@
   }
 
   .section .accent {
-    color: var(--text-primary);
+    color: var(--accent);
     font-weight: 400;
   }
 
@@ -237,8 +301,8 @@
   .new-release-badge {
     font-family: 'Space Mono', monospace;
     font-size: 0.5rem;
-    color: var(--text-primary);
-    background: rgba(255,255,255,0.08);
+    color: var(--badge-text);
+    background: var(--badge-bg);
     text-transform: uppercase;
     letter-spacing: 0.25em;
     padding: 0.2rem 0.8rem;
@@ -262,7 +326,7 @@
   }
   .new-release:hover .new-release-cover {
     filter: grayscale(0) brightness(1);
-    border-color: rgba(255,255,255,0.2);
+    border-color: var(--accent);
   }
 
   .new-release-info {
@@ -283,7 +347,7 @@
   .new-release-meta {
     font-family: 'Space Mono', monospace;
     font-size: 0.55rem;
-    color: var(--text-dim);
+    color: var(--accent-secondary);
     text-transform: uppercase;
     letter-spacing: 0.15em;
     margin-bottom: 0.5rem;
@@ -320,6 +384,7 @@
   }
   .work-card:hover .work-cover {
     filter: grayscale(0.5) brightness(0.85);
+    border-color: var(--accent);
   }
 
   .work-info {
@@ -340,7 +405,7 @@
   .work-meta {
     font-family: 'Space Mono', monospace;
     font-size: 0.6rem;
-    color: var(--text-dim);
+    color: var(--accent-secondary);
     text-transform: uppercase;
     letter-spacing: 0.2em;
     margin-bottom: 1.5rem;
@@ -367,12 +432,12 @@
     user-select: none;
   }
   .carousel-arrow:hover {
-    color: var(--text-primary);
-    border-color: rgba(255,255,255,0.18);
-    background: var(--hover);
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--hover-bg);
   }
   .carousel-arrow:active {
-    color: var(--text-primary);
+    color: var(--accent);
     background: rgba(255,255,255,0.06);
   }
   .carousel-arrow-left {
@@ -384,7 +449,7 @@
   .carousel-indicator {
     font-family: 'Space Mono', monospace;
     font-size: 0.55rem;
-    color: var(--text-dim);
+    color: var(--accent);
     letter-spacing: 0.2em;
     text-transform: uppercase;
     padding: 0.35rem 1.2rem;
@@ -415,8 +480,9 @@
     flex-shrink: 0;
   }
   .play-btn-mini:hover {
-    border-color: var(--text-primary);
-    background: var(--hover);
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--hover-bg);
   }
 
   .player-info {
@@ -439,7 +505,7 @@
   }
   .mini-progress-fill {
     height: 100%;
-    background: var(--text-secondary);
+    background: var(--accent);
     width: 0%;
     transition: width 0.1s linear;
   }
@@ -481,7 +547,7 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--text-secondary);
+    background: var(--accent);
     cursor: pointer;
     transition: background 0.2s;
   }
@@ -492,7 +558,7 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--text-secondary);
+    background: var(--accent);
     border: none;
     cursor: pointer;
   }
@@ -508,7 +574,7 @@
   }
   .mini-waveform .mw-bar {
     width: 2px;
-    background: var(--text-secondary);
+    background: var(--accent);
     transition: height 0.08s ease;
     min-height: 1px;
     border-radius: 1px;
@@ -533,13 +599,64 @@
     border-bottom: 1px solid transparent;
   }
   .contact-link:hover {
-    color: var(--text-primary);
-    border-bottom-color: var(--text-secondary);
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  /* ========== THEME SWITCHER ========== */
+  .theme-switcher {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .theme-switcher-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.5rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-right: 0.3rem;
+  }
+  .theme-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  .theme-dot:hover {
+    transform: scale(1.3);
+  }
+  .theme-dot.active {
+    border-color: var(--text-primary);
+    transform: scale(1.2);
+    box-shadow: 0 0 8px var(--accent);
+  }
+  .theme-dot-default {
+    background: #ffffff;
+  }
+  .theme-dot-gold {
+    background: #c9a44b;
+  }
+  .theme-dot-crimson {
+    background: #b8455a;
+  }
+  .theme-dot-teal {
+    background: #3d9e9e;
+  }
+  .theme-dot-duo {
+    background: linear-gradient(135deg, #b8455a 50%, #c9a44b 50%);
   }
 
   /* ========== FOOTER ========== */
   .page-footer {
-    margin-top: 5rem;
+    margin-top: 2rem;
     padding-top: 2rem;
     text-align: center;
     font-family: 'Space Mono', monospace;
@@ -549,7 +666,7 @@
     text-transform: uppercase;
   }
   .page-footer .dot {
-    color: var(--text-secondary);
+    color: var(--accent);
   }
 
   .back-link {
@@ -566,8 +683,8 @@
     padding-bottom: 0.2rem;
   }
   .back-link:hover {
-    color: var(--text-primary);
-    border-bottom-color: var(--text-dim);
+    color: var(--accent);
+    border-bottom-color: var(--accent);
   }
 
   @media (max-width: 650px) {
@@ -604,9 +721,9 @@
         <h3>unlog!c</h3>
         <span class="profile-role">звуковой архитектор</span>
         <p>
-          Холодные технологичные решения встречаются с эстетикой оркестровых инструментов.
-          Фортепиано, гитара, синтезаторы, смычковые и духовые — материал, из которого
-          строится мир unlog!c.
+          Холодные технологичные решения сплавляются с горячей эстетикой аналоговых инструментов.
+          Все доступное многообразие аудио-компонентов, инструментов и личные переживания — материал, из которого
+          строится мир unlog!c
         </p>
       </div>
     </section>
@@ -621,7 +738,7 @@
           <div class="new-release-info">
             <h3>Surrender</h3>
             <span class="new-release-meta">darkwave · orchestral · 2026</span>
-            <p class="new-release-desc">Когда сопротивление уступает месту принятию — рождается Surrender.</p>
+            <p class="new-release-desc">Когда сопротивление уступает месту принятию.</p>
           </div>
         </div>
       </div>
@@ -680,6 +797,16 @@
       </div>
     </section>
 
+    <!-- THEME SWITCHER -->
+    <div class="theme-switcher">
+      <span class="theme-switcher-label">тема</span>
+      <span class="theme-dot theme-dot-default active" data-theme="" title="Default (white)"></span>
+      <span class="theme-dot theme-dot-gold" data-theme="theme-gold" title="Gold — оркестровое тепло"></span>
+      <span class="theme-dot theme-dot-crimson" data-theme="theme-crimson" title="Crimson — алая рана"></span>
+      <span class="theme-dot theme-dot-teal" data-theme="theme-teal" title="Teal — техно-бирюза"></span>
+      <span class="theme-dot theme-dot-duo" data-theme="theme-duo" title="Duo — crimson + gold"></span>
+    </div>
+
     <!-- FOOTER -->
     <footer class="page-footer">
       unlog!c <span class="dot">·</span> 2026<br>
@@ -695,6 +822,36 @@
   </audio>
 
   <script>
+    // ============ THEME SWITCHER ============
+    (function() {
+      const body = document.body;
+      const themeDots = document.querySelectorAll('.theme-dot');
+
+      // Load saved theme from localStorage
+      const savedTheme = localStorage.getItem('unlogic-theme') || '';
+      applyTheme(savedTheme);
+
+      themeDots.forEach(dot => {
+        dot.addEventListener('click', () => {
+          const theme = dot.dataset.theme;
+          applyTheme(theme);
+          localStorage.setItem('unlogic-theme', theme);
+        });
+      });
+
+      function applyTheme(theme) {
+        // Remove all theme classes
+        body.classList.remove('theme-gold', 'theme-crimson', 'theme-teal', 'theme-duo');
+        // Add selected theme
+        if (theme) body.classList.add(theme);
+        // Update active dot
+        themeDots.forEach(d => {
+          d.classList.toggle('active', d.dataset.theme === theme);
+        });
+      }
+    })();
+
+    // ============ AUDIO PLAYER ============
     // Track data — add more entries here for new works
     const tracks = [
       {
