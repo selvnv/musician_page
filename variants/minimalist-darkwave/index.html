@@ -54,7 +54,7 @@
   /* ========== HERO ========== */
   .hero {
     text-align: center;
-    padding: 3rem 0 5rem;
+    padding: 3rem 0 3rem;
     position: relative;
   }
 
@@ -89,6 +89,62 @@
     margin: 0 auto;
     line-height: 1.7;
     letter-spacing: 0.04em;
+  }
+
+  /* ========== PROFILE ========== */
+  .profile-section {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 4rem;
+    padding: 2rem 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .profile-img-container {
+    flex-shrink: 0;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    filter: grayscale(1) brightness(0.7);
+    transition: all 0.6s ease;
+  }
+  .profile-img-container:hover {
+    filter: grayscale(0.6) brightness(0.9);
+    border-color: rgba(255,255,255,0.15);
+  }
+
+  .profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .profile-text h3 {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 300;
+    color: var(--text-primary);
+    letter-spacing: 0.06em;
+    margin-bottom: 0.3rem;
+  }
+
+  .profile-text .profile-role {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+  }
+
+  .profile-text p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: 0.8rem;
+    line-height: 1.8;
   }
 
   /* ========== SECTION ========== */
@@ -137,24 +193,78 @@
     font-weight: 400;
   }
 
-  /* ========== WAVE SEPARATOR ========== */
-  .wave-separator {
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    gap: 1px;
-    height: 40px;
-    margin: 2rem 0;
-    opacity: 0.3;
-  }
-  .wave-bar {
-    width: 2px;
-    background: var(--text-dim);
-    transition: height 0.3s ease;
-    border-radius: 1px;
+  /* ========== NEW RELEASE HIGHLIGHT ========== */
+  .new-release {
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 1.8rem;
+    margin-bottom: 2rem;
+    position: relative;
+    background: rgba(255,255,255,0.015);
   }
 
-  /* ========== WORK CARD ========== */
+  .new-release-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.5rem;
+    color: var(--text-primary);
+    background: rgba(255,255,255,0.08);
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    padding: 0.2rem 0.8rem;
+    display: inline-block;
+    margin-bottom: 1rem;
+  }
+
+  .new-release-inner {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 1.5rem;
+  }
+
+  .new-release-cover {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    filter: grayscale(0.3) brightness(0.8);
+    transition: all 0.6s ease;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .new-release:hover .new-release-cover {
+    filter: grayscale(0) brightness(1);
+    border-color: rgba(255,255,255,0.2);
+  }
+
+  .new-release-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .new-release-info h3 {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: var(--text-primary);
+    letter-spacing: 0.08em;
+    margin-bottom: 0.2rem;
+  }
+
+  .new-release-meta {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 0.5rem;
+  }
+
+  .new-release-desc {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-bottom: 0.6rem;
+  }
+
+  /* ========== WORK CAROUSEL ========== */
   .work-card {
     display: grid;
     grid-template-columns: 200px 1fr;
@@ -174,6 +284,7 @@
     object-fit: cover;
     filter: grayscale(1) brightness(0.6);
     transition: all 0.6s ease;
+    border: 1px solid transparent;
   }
   .work-card:hover .work-cover {
     filter: grayscale(0.5) brightness(0.85);
@@ -201,6 +312,45 @@
     text-transform: uppercase;
     letter-spacing: 0.2em;
     margin-bottom: 1.5rem;
+  }
+
+  /* Track selector tabs (carousel) */
+  .track-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 1.2rem;
+  }
+  .track-tab {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    background: none;
+    border: 1px solid var(--border);
+    border-bottom: none;
+    padding: 0.5rem 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  .track-tab:hover {
+    color: var(--text-secondary);
+  }
+  .track-tab.active {
+    color: var(--text-primary);
+    border-color: rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.03);
+  }
+  .track-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--text-primary);
+    opacity: 0.5;
   }
 
   /* Minimal player */
@@ -261,6 +411,50 @@
     font-size: 0.5rem;
     color: var(--text-dim);
     margin-top: 0.3rem;
+  }
+
+  /* Volume control */
+  .volume-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.8rem;
+  }
+  .volume-icon {
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    font-family: 'Space Mono', monospace;
+    flex-shrink: 0;
+  }
+  .volume-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 80px;
+    height: 1px;
+    background: var(--border);
+    outline: none;
+    cursor: pointer;
+  }
+  .volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--text-secondary);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .volume-slider::-webkit-slider-thumb:hover {
+    background: var(--text-primary);
+  }
+  .volume-slider::-moz-range-thumb {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--text-secondary);
+    border: none;
+    cursor: pointer;
   }
 
   /* Subtle waveform visualizer */
@@ -326,11 +520,10 @@
     text-decoration: none;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    transition: color 0.3s;
+    transition: border-color 0.3s, color 0.3s;
     position: relative;
     padding-bottom: 0.3rem;
     border-bottom: 1px solid transparent;
-    transition: border-color 0.3s, color 0.3s;
   }
   .contact-link:hover {
     color: var(--text-primary);
@@ -373,8 +566,11 @@
   @media (max-width: 650px) {
     .container { padding: 2rem 1.5rem; }
     .hero h1 { font-size: 2.2rem; }
+    .profile-section { flex-direction: column; text-align: center; }
     .work-card { grid-template-columns: 1fr; gap: 1.5rem; }
     .work-cover { width: 100%; height: auto; max-width: 250px; }
+    .new-release-inner { grid-template-columns: 1fr; }
+    .new-release-cover { width: 100%; height: auto; max-width: 200px; }
     .tech-list { grid-template-columns: 1fr; }
     .tech-item:nth-child(even) { border-left: none; padding-left: 0; }
     .tech-item:nth-child(odd) { padding-right: 0; }
@@ -393,48 +589,71 @@
       </p>
     </header>
 
-    <!-- Random static wave separator -->
-    <div class="wave-separator" id="waveSep"></div>
-
-    <!-- ABOUT -->
-    <section class="section">
-      <div class="section-label">обо мне</div>
-      <h2>Звуковой архитектор</h2>
-      <p>
-        Пишу музыку под псевдонимом <span class="accent">unlog!c</span> — 
-        пространство, где <span class="accent">холодные технологичные решения</span> 
-        встречаются с эстетикой оркестровых инструментов.
-      </p>
-      <p>
-        Фортепиано и гитара — с детства. Синтезаторы, смычковые, духовые — 
-        материал, из которого строится мир <span class="accent">unlog!c</span>. 
-        Электронное звучание пронизывает классические инструменты, 
-        как цифровой сигнал — аналоговый тракт.
-      </p>
+    <!-- PROFILE -->
+    <section class="profile-section">
+      <div class="profile-img-container">
+        <img src="../../images/Profile.png" alt="unlog!c" class="profile-img" loading="lazy">
+      </div>
+      <div class="profile-text">
+        <h3>unlog!c</h3>
+        <span class="profile-role">звуковой архитектор</span>
+        <p>
+          Холодные технологичные решения встречаются с эстетикой оркестровых инструментов.
+          Фортепиано, гитара, синтезаторы, смычковые и духовые — материал, из которого
+          строится мир unlog!c.
+        </p>
+      </div>
     </section>
 
-    <!-- WORK -->
+    <!-- NEW RELEASE -->
     <section class="section">
-      <div class="section-label">работа</div>
-      <h2>Dark Ages</h2>
+      <div class="section-label">новый релиз</div>
+      <div class="new-release">
+        <span class="new-release-badge">op. ii — только что</span>
+        <div class="new-release-inner">
+          <img src="../../images/Surrender Cover.png" alt="Surrender Cover" class="new-release-cover" loading="lazy">
+          <div class="new-release-info">
+            <h3>Surrender</h3>
+            <span class="new-release-meta">darkwave · orchestral · 2026</span>
+            <p class="new-release-desc">Когда сопротивление уступает месту принятию — рождается Surrender.</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-      <div class="work-card">
+    <!-- WORKS CAROUSEL -->
+    <section class="section">
+      <div class="section-label">работы</div>
+      <h2>Дискография</h2>
+
+      <!-- Track tabs -->
+      <div class="track-tabs">
+        <button class="track-tab active" data-track="0" id="tab0">Dark Ages</button>
+        <button class="track-tab" data-track="1" id="tab1">Surrender</button>
+      </div>
+
+      <div class="work-card" id="workCard">
         <div class="work-cover-container">
-          <img src="../../images/Dark Ages Cover.png" alt="Dark Ages Cover" class="work-cover" loading="lazy">
+          <img src="../../images/Dark Ages Cover.png" alt="Cover" class="work-cover" id="workCover" loading="lazy">
         </div>
         <div class="work-info">
-          <div class="work-meta">op. I &nbsp;·&nbsp; darkwave / orchestral</div>
+          <h3 id="workTitle">Dark Ages</h3>
+          <div class="work-meta" id="workMeta">op. I &nbsp;·&nbsp; darkwave / orchestral</div>
 
           <div class="minimal-player">
-            <button class="play-btn-mini play-btn-m" onclick="togglePlayM()" aria-label="Play/Pause">▶</button>
+            <button class="play-btn-mini" id="playBtn" onclick="togglePlay()" aria-label="Play/Pause">▶</button>
             <div class="player-info">
-              <div class="player-track-name">Dark Ages — unlog!c</div>
+              <div class="player-track-name" id="trackName">Dark Ages — unlog!c</div>
               <div class="mini-progress" id="miniProgress">
                 <div class="mini-progress-fill" id="miniProgressFill"></div>
               </div>
               <div class="player-times">
-                <span class="time-cur-m">0:00</span>
-                <span class="time-dur-m">0:00</span>
+                <span class="time-cur" id="timeCur">0:00</span>
+                <span class="time-dur" id="timeDur">0:00</span>
+              </div>
+              <div class="volume-row">
+                <span class="volume-icon">vol</span>
+                <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="80" oninput="setVolume(this.value)">
               </div>
               <div class="mini-waveform" id="miniWaveform"></div>
             </div>
@@ -448,7 +667,7 @@
       <div class="section-label">технологии & инструменты</div>
       <h2>Стек</h2>
       <p>
-        Технологии для меня — не просто инструмент, а способ мышления. 
+        Технологии для меня — не просто инструмент, а способ мышления.
         Код как партитура, процессор как оркестр.
       </p>
       <div class="tech-list">
@@ -504,30 +723,49 @@
     </footer>
   </div>
 
-  <audio id="audioM" preload="metadata" style="display:none;">
+  <audio id="audio0" preload="metadata" style="display:none;">
     <source src="../../audio/Dark Ages.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="audio1" preload="metadata" style="display:none;">
+    <source src="../../audio/novel - Surrender.mp3" type="audio/mpeg">
   </audio>
 
   <script>
-    // Static wave separator
-    const waveSep = document.getElementById('waveSep');
-    for (let i = 0; i < 80; i++) {
-      const bar = document.createElement('div');
-      bar.className = 'wave-bar';
-      bar.style.height = (Math.abs(Math.sin(i * 0.3) * 18 + Math.sin(i * 0.7) * 8) + 4) + 'px';
-      waveSep.appendChild(bar);
-    }
+    // Track data
+    const tracks = [
+      {
+        title: 'Dark Ages',
+        meta: 'op. I · darkwave / orchestral',
+        cover: '../../images/Dark Ages Cover.png',
+        audioId: 'audio0',
+        trackName: 'Dark Ages — unlog!c'
+      },
+      {
+        title: 'Surrender',
+        meta: 'op. II · darkwave / orchestral · 2026',
+        cover: '../../images/Surrender Cover.png',
+        audioId: 'audio1',
+        trackName: 'Surrender — unlog!c'
+      }
+    ];
 
-    // Audio player
-    const audioM = document.getElementById('audioM');
-    const playBtnM = document.querySelector('.play-btn-m');
-    const progressFillM = document.getElementById('miniProgressFill');
-    const progressBarM = document.getElementById('miniProgress');
-    const timeCurM = document.querySelector('.time-cur-m');
-    const timeDurM = document.querySelector('.time-dur-m');
+    let currentTrack = 0;
+    let currentAudio = document.getElementById('audio0');
+
+    // DOM refs
+    const playBtn = document.getElementById('playBtn');
+    const progressFill = document.getElementById('miniProgressFill');
+    const progressBar = document.getElementById('miniProgress');
+    const timeCur = document.getElementById('timeCur');
+    const timeDur = document.getElementById('timeDur');
     const miniWave = document.getElementById('miniWaveform');
+    const volumeSlider = document.getElementById('volumeSlider');
+    const workCover = document.getElementById('workCover');
+    const workTitle = document.getElementById('workTitle');
+    const workMeta = document.getElementById('workMeta');
+    const trackNameEl = document.getElementById('trackName');
 
-    function fmtM(t) {
+    function fmt(t) {
       const m = Math.floor(t / 60);
       const s = Math.floor(t % 60);
       return m + ':' + String(s).padStart(2, '0');
@@ -541,42 +779,120 @@
       miniWave.appendChild(wb);
     }
 
-    audioM.addEventListener('loadedmetadata', () => {
-      timeDurM.textContent = fmtM(audioM.duration);
-    });
+    function bindAudio(audio) {
+      audio.removeEventListener('loadedmetadata', onMeta);
+      audio.removeEventListener('timeupdate', onTimeUpdate);
+      audio.removeEventListener('ended', onEnded);
 
-    audioM.addEventListener('timeupdate', () => {
-      const pct = (audioM.currentTime / audioM.duration) * 100 || 0;
-      progressFillM.style.width = pct + '%';
-      timeCurM.textContent = fmtM(audioM.currentTime);
+      audio.addEventListener('loadedmetadata', onMeta);
+      audio.addEventListener('timeupdate', onTimeUpdate);
+      audio.addEventListener('ended', onEnded);
+
+      if (audio.readyState >= 1) {
+        timeDur.textContent = fmt(audio.duration);
+      } else {
+        timeDur.textContent = '0:00';
+      }
+    }
+
+    function onMeta() {
+      timeDur.textContent = fmt(currentAudio.duration);
+    }
+
+    function onTimeUpdate() {
+      const pct = (currentAudio.currentTime / currentAudio.duration) * 100 || 0;
+      progressFill.style.width = pct + '%';
+      timeCur.textContent = fmt(currentAudio.currentTime);
 
       const wbars = miniWave.children;
-      const t = audioM.currentTime * 6;
+      const t = currentAudio.currentTime * 6;
       for (let i = 0; i < wbars.length; i++) {
         const val = Math.abs(Math.sin(t + i * 0.2) * 0.5 + Math.sin(t * 2.1 + i * 0.5) * 0.5);
         wbars[i].style.height = Math.max(1, val * 14 + 1) + 'px';
         wbars[i].style.opacity = 0.15 + val * 0.6;
       }
+    }
+
+    function onEnded() {
+      playBtn.textContent = '▶';
+    }
+
+    bindAudio(currentAudio);
+
+    volumeSlider.addEventListener('input', () => {
+      setVolume(volumeSlider.value);
     });
 
-    progressBarM.addEventListener('click', (e) => {
-      const rect = progressBarM.getBoundingClientRect();
-      audioM.currentTime = ((e.clientX - rect.left) / rect.width) * audioM.duration;
+    function setVolume(val) {
+      const v = val / 100;
+      currentAudio.volume = v;
+      volumeSlider.value = val;
+    }
+
+    // Init volume
+    currentAudio.volume = volumeSlider.value / 100;
+    // Also init second audio volume (will be synced on switch)
+    document.getElementById('audio1').volume = volumeSlider.value / 100;
+
+    progressBar.addEventListener('click', (e) => {
+      const rect = progressBar.getBoundingClientRect();
+      currentAudio.currentTime = ((e.clientX - rect.left) / rect.width) * currentAudio.duration;
     });
 
-    function togglePlayM() {
-      if (audioM.paused) {
-        audioM.play();
-        playBtnM.textContent = '⏸';
+    function togglePlay() {
+      if (currentAudio.paused) {
+        currentAudio.play();
+        playBtn.textContent = '⏸';
       } else {
-        audioM.pause();
-        playBtnM.textContent = '▶';
+        currentAudio.pause();
+        playBtn.textContent = '▶';
       }
     }
 
-    audioM.addEventListener('ended', () => {
-      playBtnM.textContent = '▶';
-    });
+    // Pause all audios helper
+    function pauseAll() {
+      document.querySelectorAll('audio').forEach(a => {
+        a.pause();
+        a.currentTime = a.currentTime; // keep position but pause
+      });
+    }
+
+    // Carousel switching
+    function switchTrack(index) {
+      if (index === currentTrack) return;
+
+      // Pause current
+      currentAudio.pause();
+
+      // Switch
+      currentTrack = index;
+      currentAudio = document.getElementById(tracks[index].audioId);
+      currentAudio.volume = volumeSlider.value / 100;
+
+      // Update UI
+      workCover.src = tracks[index].cover;
+      workTitle.textContent = tracks[index].title;
+      workMeta.textContent = tracks[index].meta;
+      trackNameEl.textContent = tracks[index].trackName;
+
+      // Reset progress
+      progressFill.style.width = '0%';
+      timeCur.textContent = '0:00';
+
+      // Reset play button
+      playBtn.textContent = '▶';
+
+      // Bind events
+      bindAudio(currentAudio);
+
+      // Update tabs
+      document.querySelectorAll('.track-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById('tab' + index).classList.add('active');
+    }
+
+    // Tab click handlers
+    document.getElementById('tab0').addEventListener('click', () => switchTrack(0));
+    document.getElementById('tab1').addEventListener('click', () => switchTrack(1));
   </script>
 </body>
 </html>

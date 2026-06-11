@@ -114,11 +114,8 @@
     pointer-events: none;
   }
 
-  .variant-card:nth-child(1)::before { background: linear-gradient(135deg, rgba(0,255,65,0.08), transparent); }
-  .variant-card:nth-child(2)::before { background: linear-gradient(135deg, rgba(201,168,76,0.08), transparent); }
-  .variant-card:nth-child(3)::before { background: linear-gradient(135deg, rgba(252,238,10,0.08), transparent); }
-  .variant-card:nth-child(4)::before { background: linear-gradient(135deg, rgba(180,180,180,0.06), transparent); }
-  .variant-card:nth-child(5)::before { background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(123,47,190,0.06), transparent); }
+  .variant-card:nth-child(1)::before { background: linear-gradient(135deg, rgba(180,180,180,0.08), transparent); }
+  .variant-card:nth-child(2)::before { background: linear-gradient(135deg, rgba(0,212,255,0.12), rgba(123,47,190,0.08), transparent); }
 
   .variant-card:hover {
     border-color: rgba(255,255,255,0.15);
@@ -135,11 +132,8 @@
     margin-bottom: 0.3rem;
   }
 
-  .variant-card:nth-child(1) .variant-number { color: #00ff41; }
-  .variant-card:nth-child(2) .variant-number { color: #c9a84c; }
-  .variant-card:nth-child(3) .variant-number { color: #fcee0a; }
-  .variant-card:nth-child(4) .variant-number { color: #888; }
-  .variant-card:nth-child(5) .variant-number { color: #00d4ff; }
+  .variant-card:nth-child(1) .variant-number { color: #aaa; }
+  .variant-card:nth-child(2) .variant-number { color: #00d4ff; }
 
   .variant-name {
     font-family: 'Cinzel', serif;
@@ -165,11 +159,8 @@
     transition: opacity 0.4s ease;
   }
   .variant-card:hover .variant-accent { opacity: 0.4; }
-  .variant-card:nth-child(1) .variant-accent { color: #00ff41; }
-  .variant-card:nth-child(2) .variant-accent { color: #c9a84c; }
-  .variant-card:nth-child(3) .variant-accent { color: #fcee0a; }
-  .variant-card:nth-child(4) .variant-accent { color: #666; }
-  .variant-card:nth-child(5) .variant-accent { color: #00d4ff; }
+  .variant-card:nth-child(1) .variant-accent { color: #999; }
+  .variant-card:nth-child(2) .variant-accent { color: #00d4ff; }
 
   footer {
     margin-top: 3rem;
@@ -194,36 +185,15 @@
     <h2>выбери вариант дизайна</h2>
 
     <div class="variants">
-      <a href="variants/cyberpunk-terminal/" class="variant-card">
-        <span class="variant-number">01 / вариант</span>
-        <div class="variant-name">Cyberpunk Terminal</div>
-        <div class="variant-desc">Взломанная консоль, CRT scanlines, неоновая зелень на чёрном. Хакерская эстетика.</div>
-        <span class="variant-accent">>_</span>
-      </a>
-
-      <a href="variants/dark-orchestral/" class="variant-card">
-        <span class="variant-number">02 / вариант</span>
-        <div class="variant-name">Dark Orchestral</div>
-        <div class="variant-desc">Belle Époque × тёмное фэнтези. Золото на чёрном, парижская опера во тьме.</div>
-        <span class="variant-accent">♫</span>
-      </a>
-
-      <a href="variants/cyberpunk-hud/" class="variant-card">
-        <span class="variant-number">03 / вариант</span>
-        <div class="variant-name">Cyberpunk 2077 HUD</div>
-        <div class="variant-desc">Интерфейс кибер-имплантов. Жёлтый, острые углы, голографическое мерцание.</div>
-        <span class="variant-accent">◈</span>
-      </a>
-
       <a href="variants/minimalist-darkwave/" class="variant-card">
-        <span class="variant-number">04 / вариант</span>
+        <span class="variant-number">01 / вариант</span>
         <div class="variant-name">Minimalist Darkwave</div>
         <div class="variant-desc">Премиум аудио-минимализм. Абсолютный чёрный, тонкие линии, волновая форма.</div>
         <span class="variant-accent">▬</span>
       </a>
 
       <a href="variants/void-forge/" class="variant-card">
-        <span class="variant-number">05 / вариант</span>
+        <span class="variant-number">02 / вариант</span>
         <div class="variant-name">Void Forge — Техно-гримуар</div>
         <div class="variant-desc">Кремний встречает магию. Готические орнаменты из печатных плат, ледяной неон.</div>
         <span class="variant-accent">◆</span>
