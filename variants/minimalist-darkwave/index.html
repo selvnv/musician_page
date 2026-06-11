@@ -583,28 +583,26 @@
   /* ========== INVENTORY ========== */
   .inventory-list {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 0;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.3rem 2.5rem;
   }
   .inventory-item {
-    display: grid;
-    grid-template-columns: 140px 1fr;
-    gap: 1.5rem;
-    padding: 0.65rem 0;
-    border-bottom: 1px solid var(--border);
-    align-items: baseline;
+    display: flex;
+    flex-direction: column;
+    padding: 0.25rem 0;
+    border-bottom: none;
   }
   .inventory-cat {
     font-family: 'Space Mono', monospace;
-    font-size: 0.55rem;
+    font-size: 0.45rem;
     color: var(--accent);
     text-transform: uppercase;
     letter-spacing: 0.15em;
     line-height: 1.4;
-    padding-top: 0.15rem;
+    padding-top: 0;
   }
   .inventory-model {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     color: var(--text-secondary);
     font-weight: 300;
     letter-spacing: 0.03em;
@@ -782,7 +780,7 @@
     .new-release-inner { grid-template-columns: 1fr; }
     .new-release-cover { width: 100%; height: auto; max-width: 200px; }
     .carousel-nav { justify-content: center; }
-    .inventory-item { grid-template-columns: 110px 1fr; gap: 1rem; }
+    .inventory-list { grid-template-columns: 1fr; }
   }
 </style>
 </head>
