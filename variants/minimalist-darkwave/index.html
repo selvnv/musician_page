@@ -580,6 +580,92 @@
     border-radius: 1px;
   }
 
+  /* ========== INVENTORY ========== */
+  .inventory-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .inventory-item {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 1.5rem;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid var(--border);
+    align-items: baseline;
+  }
+  .inventory-cat {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    line-height: 1.4;
+    padding-top: 0.15rem;
+  }
+  .inventory-model {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: 300;
+    letter-spacing: 0.03em;
+    line-height: 1.5;
+  }
+
+  /* ========== VIDEO SECTION ========== */
+  .video-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: #000;
+    border: 1px solid var(--border);
+  }
+  .video-container video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    object-fit: cover;
+    pointer-events: none;
+  }
+
+  /* ========== WAVE SUPERPOSITION VIZ ========== */
+  .wave-viz-container {
+    position: relative;
+    width: 100%;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .wave-viz-container canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .wave-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-top: 0.8rem;
+    justify-content: center;
+  }
+  .wave-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.5rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+  .wave-legend-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
   /* ========== CONTACTS ========== */
   .contacts-row {
     display: flex;
@@ -696,6 +782,7 @@
     .new-release-inner { grid-template-columns: 1fr; }
     .new-release-cover { width: 100%; height: auto; max-width: 200px; }
     .carousel-nav { justify-content: center; }
+    .inventory-item { grid-template-columns: 110px 1fr; gap: 1rem; }
   }
 </style>
 </head>
@@ -721,9 +808,7 @@
         <h3>unlog!c</h3>
         <span class="profile-role">звуковой архитектор</span>
         <p>
-          Холодные технологичные решения сплавляются с горячей эстетикой аналоговых инструментов.
-          Все доступное многообразие аудио-компонентов, инструментов и личные переживания — материал, из которого
-          строится мир unlog!c
+          Холодные технологичные решения сплавляются с горячей эстетикой аналоговых инструментов. Все доступное многообразие аудио-компонентов, инструментов и личные переживания — материал, из которого строится мир unlog!c
         </p>
       </div>
     </section>
@@ -738,7 +823,7 @@
           <div class="new-release-info">
             <h3>Surrender</h3>
             <span class="new-release-meta">darkwave · orchestral · 2026</span>
-            <p class="new-release-desc">Когда сопротивление уступает месту принятию.</p>
+            <p class="new-release-desc">Когда сопротивление уступает месту принятию — рождается Surrender.</p>
           </div>
         </div>
       </div>
@@ -749,7 +834,6 @@
       <div class="section-label">работы</div>
       <h2>Дискография</h2>
 
-      <!-- Carousel navigation -->
       <div class="carousel-nav">
         <button class="carousel-arrow carousel-arrow-left" id="carouselPrev" aria-label="Предыдущий трек">←</button>
         <span class="carousel-indicator" id="carouselIndicator">1 / 2</span>
@@ -782,6 +866,95 @@
               <div class="mini-waveform" id="miniWaveform"></div>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIDEO -->
+    <section class="section">
+      <div class="section-label">видео</div>
+      <div class="video-container">
+        <video src="../../videos/videofragment.mp4" autoplay muted loop playsinline></video>
+      </div>
+    </section>
+
+    <!-- WAVE SUPERPOSITION VIZ -->
+    <section class="section">
+      <div class="section-label">суперпозиция волн</div>
+      <p>
+        Три компонентные волны, накладываясь друг на друга, формируют итоговую звуковую волну —
+        так же, как слои инструментов в аранжировке создают финальное звучание.
+      </p>
+      <div class="wave-viz-container">
+        <canvas id="waveCanvas" width="800" height="280"></canvas>
+      </div>
+      <div class="wave-legend">
+        <div class="wave-legend-item">
+          <span class="wave-legend-dot" style="background:var(--accent-secondary);opacity:0.5;"></span>
+          низкая частота (бас)
+        </div>
+        <div class="wave-legend-item">
+          <span class="wave-legend-dot" style="background:var(--accent);opacity:0.7;"></span>
+          средняя частота (основной тон)
+        </div>
+        <div class="wave-legend-item">
+          <span class="wave-legend-dot" style="background:var(--text-dim);"></span>
+          высокая частота (обертоны)
+        </div>
+        <div class="wave-legend-item">
+          <span class="wave-legend-dot" style="background:var(--accent);box-shadow:0 0 4px var(--accent);"></span>
+          результирующая волна
+        </div>
+      </div>
+    </section>
+
+    <!-- INVENTORY -->
+    <section class="section">
+      <div class="section-label">инвентарь</div>
+      <div class="inventory-list">
+        <div class="inventory-item">
+          <span class="inventory-cat">DAW</span>
+          <span class="inventory-model">Ableton Live</span>
+        </div>
+        <div class="inventory-item">
+          <span class="inventory-cat">Интерфейс</span>
+          <span class="inventory-model">M-Audio AIR 192 14</span>
+        </div>
+        <div class="inventory-item">
+          <span class="inventory-cat">Гитары</span>
+          <span class="inventory-model">Fender Squier Affinity 2021 Stratocaster</span>
+        </div>
+        <div class="inventory-item">
+          <span class="inventory-cat">&nbsp;</span>
+          <span class="inventory-model">Epiphone Les Paul Standard 60s Blueberry Burst</span>
+        </div>
+        <div class="inventory-item">
+          <span class="inventory-cat">Бас</span>
+          <span class="inventory-model">Ibanez GIO GSR200B</span>
+        </div>
+        <div class="inventory-item">
+          <span class="inventory-cat">Фортепиано</span>
+          <span class="inventory-model">Casio Privia PX-S1100</span>
+        </div>
+        <div class="inventory-item">
+          <span class="inventory-cat">Синтезатор</span>
+          <span class="inventory-model">KORG MINILOGUE-XD</span>
+        </div>
+        <div class="inventory-item">
+          <span class="inventory-cat">Процессор</span>
+          <span class="inventory-model">HOTONE Ampero Mini</span>
+        </div>
+        <div class="inventory-item">
+          <span class="inventory-cat">Мониторы</span>
+          <span class="inventory-model">JBL 305P MKII</span>
+        </div>
+        <div class="inventory-item">
+          <span class="inventory-cat">Наушники</span>
+          <span class="inventory-model">Beyerdynamic DT 880 (250 Ом)</span>
+        </div>
+        <div class="inventory-item">
+          <span class="inventory-cat">Рабочая станция</span>
+          <span class="inventory-model">Intel Core i5-14600kf · 32 GB RAM</span>
         </div>
       </div>
     </section>
@@ -821,13 +994,12 @@
     <source src="../../audio/novel - Surrender.mp3" type="audio/mpeg">
   </audio>
 
-  <script>
+<script>
     // ============ THEME SWITCHER ============
     (function() {
       const body = document.body;
       const themeDots = document.querySelectorAll('.theme-dot');
 
-      // Load saved theme from localStorage
       const savedTheme = localStorage.getItem('unlogic-theme') || '';
       applyTheme(savedTheme);
 
@@ -840,19 +1012,122 @@
       });
 
       function applyTheme(theme) {
-        // Remove all theme classes
         body.classList.remove('theme-gold', 'theme-crimson', 'theme-teal', 'theme-duo');
-        // Add selected theme
         if (theme) body.classList.add(theme);
-        // Update active dot
         themeDots.forEach(d => {
           d.classList.toggle('active', d.dataset.theme === theme);
         });
       }
     })();
 
+    // ============ WAVE SUPERPOSITION VIZ ============
+    (function() {
+      const canvas = document.getElementById('waveCanvas');
+      const ctx = canvas.getContext('2d');
+
+      const W = canvas.width;
+      const H = canvas.height;
+      const centerY = H / 2;
+
+      // Wave parameters: [frequency, amplitude, phaseSpeed, yOffset, colorFn]
+      // yOffset positions the component wave relative to center
+      let time = 0;
+
+      function getAccentRGB() {
+        const style = getComputedStyle(document.body);
+        const accent = style.getPropertyValue('--accent').trim();
+        const sec = style.getPropertyValue('--accent-secondary').trim();
+        return { accent, sec };
+      }
+
+      function hexToRgb(hex) {
+        hex = hex.replace('#', '');
+        if (hex.length === 3) hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+        const r = parseInt(hex.substring(0,2), 16);
+        const g = parseInt(hex.substring(2,4), 16);
+        const b = parseInt(hex.substring(4,6), 16);
+        return `${r},${g},${b}`;
+      }
+
+      function draw() {
+        time += 0.016; // ~60fps increment
+
+        const colors = getAccentRGB();
+        const accentRGB = hexToRgb(colors.accent);
+        const secRGB = hexToRgb(colors.sec);
+
+        // Clear
+        ctx.clearRect(0, 0, W, H);
+
+        // Grid lines
+        ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+        ctx.lineWidth = 1;
+        for (let y = 0; y < H; y += 40) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(W, y);
+          ctx.stroke();
+        }
+        // Center line slightly brighter
+        ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+        ctx.beginPath();
+        ctx.moveTo(0, centerY);
+        ctx.lineTo(W, centerY);
+        ctx.stroke();
+
+        // Wave definitions
+        const waves = [
+          { freq: 2.2, amp: 45, speed: 1.1, yOff: 0, color: `rgba(${secRGB},0.45)`, lw: 1.2 },
+          { freq: 5.3, amp: 38, speed: 1.9, yOff: 0, color: `rgba(${accentRGB},0.65)`, lw: 1.4 },
+          { freq: 11.7, amp: 25, speed: 3.1, yOff: 0, color: 'rgba(58,58,58,0.7)', lw: 1.0 },
+        ];
+
+        // Offsets for component waves so they don't overlap
+        waves[0].yOff = -55;
+        waves[1].yOff = 0;
+        waves[2].yOff = 55;
+
+        // Draw component waves + compute resultant
+        const resultant = new Float32Array(W);
+
+        waves.forEach(w => {
+          ctx.strokeStyle = w.color;
+          ctx.lineWidth = w.lw;
+          ctx.beginPath();
+          for (let x = 0; x < W; x++) {
+            const t = (x / W) * Math.PI * 2 * w.freq + time * w.speed;
+            const y = centerY + w.yOff + Math.sin(t) * w.amp;
+            if (x === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+
+            // Accumulate resultant (normalize yOff to center)
+            const ty = centerY + Math.sin(t) * w.amp;
+            resultant[x] += (ty - centerY);
+          }
+          ctx.stroke();
+        });
+
+        // Draw resultant wave
+        ctx.strokeStyle = `rgba(${accentRGB},0.95)`;
+        ctx.lineWidth = 2.2;
+        ctx.shadowColor = `rgba(${accentRGB},0.5)`;
+        ctx.shadowBlur = 6;
+        ctx.beginPath();
+        for (let x = 0; x < W; x++) {
+          const y = centerY + resultant[x];
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        requestAnimationFrame(draw);
+      }
+
+      draw();
+    })();
+
     // ============ AUDIO PLAYER ============
-    // Track data — add more entries here for new works
     const tracks = [
       {
         title: 'Dark Ages',
@@ -873,7 +1148,6 @@
     let currentTrack = 0;
     let currentAudio = document.getElementById('audio0');
 
-    // DOM refs
     const playBtn = document.getElementById('playBtn');
     const progressFill = document.getElementById('miniProgressFill');
     const progressBar = document.getElementById('miniProgress');
@@ -893,7 +1167,6 @@
       return m + ':' + String(s).padStart(2, '0');
     }
 
-    // Build mini waveform bars
     for (let i = 0; i < 80; i++) {
       const wb = document.createElement('div');
       wb.className = 'mw-bar';
@@ -951,7 +1224,6 @@
       volumeSlider.value = val;
     }
 
-    // Init volume
     currentAudio.volume = volumeSlider.value / 100;
     document.getElementById('audio1').volume = volumeSlider.value / 100;
 
@@ -974,34 +1246,24 @@
       carouselIndicator.textContent = (currentTrack + 1) + ' / ' + tracks.length;
     }
 
-    // Carousel switching
     function switchTrack(index) {
       if (index === currentTrack) return;
 
-      // Pause current
       currentAudio.pause();
-
-      // Switch
       currentTrack = index;
       currentAudio = document.getElementById(tracks[index].audioId);
       currentAudio.volume = volumeSlider.value / 100;
 
-      // Update UI
       workCover.src = tracks[index].cover;
       workTitle.textContent = tracks[index].title;
       workMeta.textContent = tracks[index].meta;
       trackNameEl.textContent = tracks[index].trackName;
 
-      // Reset progress
       progressFill.style.width = '0%';
       timeCur.textContent = '0:00';
-
-      // Reset play button
       playBtn.textContent = '▶';
 
-      // Bind events
       bindAudio(currentAudio);
-
       updateIndicator();
     }
 
