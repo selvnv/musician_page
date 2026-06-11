@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>unlog!c — выбор дизайна</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Cinzel:wght@400;700&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #020510;
+    color: #c8d6e5;
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    overflow-x: hidden;
+  }
+
+  /* Ambient background glow */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 50% 50%, rgba(0,212,255,0.03) 0%, transparent 50%),
+                radial-gradient(circle at 30% 70%, rgba(123,47,190,0.04) 0%, transparent 50%),
+                radial-gradient(circle at 70% 30%, rgba(252,238,10,0.02) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 800px;
+    width: 100%;
+  }
+
+  .logo {
+    font-family: 'Cinzel', serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #00d4ff, #7b2fbe, #00d4ff);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: logoShimmer 4s ease-in-out infinite;
+  }
+
+  @keyframes logoShimmer {
+    0%, 100% { background-position: 0% center; }
+    50% { background-position: 200% center; }
+  }
+
+  .subtitle {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.9rem;
+    color: #00d4ff;
+    opacity: 0.7;
+    letter-spacing: 0.3em;
+    margin-bottom: 3rem;
+    text-transform: uppercase;
+  }
+
+  h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.2rem;
+    color: rgba(200,214,229,0.6);
+    letter-spacing: 0.15em;
+    margin-bottom: 2rem;
+    font-weight: 400;
+  }
+
+  .variants {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .variant-card {
+    display: block;
+    text-decoration: none;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 1.5rem 2rem;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    text-align: left;
+  }
+
+  .variant-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 8px;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+
+  .variant-card:nth-child(1)::before { background: linear-gradient(135deg, rgba(0,255,65,0.08), transparent); }
+  .variant-card:nth-child(2)::before { background: linear-gradient(135deg, rgba(201,168,76,0.08), transparent); }
+  .variant-card:nth-child(3)::before { background: linear-gradient(135deg, rgba(252,238,10,0.08), transparent); }
+  .variant-card:nth-child(4)::before { background: linear-gradient(135deg, rgba(180,180,180,0.06), transparent); }
+  .variant-card:nth-child(5)::before { background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(123,47,190,0.06), transparent); }
+
+  .variant-card:hover {
+    border-color: rgba(255,255,255,0.15);
+    transform: translateX(8px);
+    background: rgba(255,255,255,0.04);
+  }
+  .variant-card:hover::before { opacity: 1; }
+
+  .variant-number {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+
+  .variant-card:nth-child(1) .variant-number { color: #00ff41; }
+  .variant-card:nth-child(2) .variant-number { color: #c9a84c; }
+  .variant-card:nth-child(3) .variant-number { color: #fcee0a; }
+  .variant-card:nth-child(4) .variant-number { color: #888; }
+  .variant-card:nth-child(5) .variant-number { color: #00d4ff; }
+
+  .variant-name {
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    color: #e8edf5;
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.05em;
+  }
+
+  .variant-desc {
+    font-size: 0.85rem;
+    color: rgba(200,214,229,0.5);
+    line-height: 1.5;
+  }
+
+  .variant-accent {
+    position: absolute;
+    right: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2rem;
+    opacity: 0.15;
+    transition: opacity 0.4s ease;
+  }
+  .variant-card:hover .variant-accent { opacity: 0.4; }
+  .variant-card:nth-child(1) .variant-accent { color: #00ff41; }
+  .variant-card:nth-child(2) .variant-accent { color: #c9a84c; }
+  .variant-card:nth-child(3) .variant-accent { color: #fcee0a; }
+  .variant-card:nth-child(4) .variant-accent { color: #666; }
+  .variant-card:nth-child(5) .variant-accent { color: #00d4ff; }
+
+  footer {
+    margin-top: 3rem;
+    font-size: 0.75rem;
+    color: rgba(200,214,229,0.25);
+    letter-spacing: 0.1em;
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (max-width: 500px) {
+    .logo { font-size: 2.2rem; }
+    .variant-card { padding: 1.2rem 1.5rem; }
+    .variant-name { font-size: 1.1rem; }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">unlog!c</div>
+    <div class="subtitle">design variants</div>
+    <h2>выбери вариант дизайна</h2>
+
+    <div class="variants">
+      <a href="variants/cyberpunk-terminal/" class="variant-card">
+        <span class="variant-number">01 / вариант</span>
+        <div class="variant-name">Cyberpunk Terminal</div>
+        <div class="variant-desc">Взломанная консоль, CRT scanlines, неоновая зелень на чёрном. Хакерская эстетика.</div>
+        <span class="variant-accent">>_</span>
+      </a>
+
+      <a href="variants/dark-orchestral/" class="variant-card">
+        <span class="variant-number">02 / вариант</span>
+        <div class="variant-name">Dark Orchestral</div>
+        <div class="variant-desc">Belle Époque × тёмное фэнтези. Золото на чёрном, парижская опера во тьме.</div>
+        <span class="variant-accent">♫</span>
+      </a>
+
+      <a href="variants/cyberpunk-hud/" class="variant-card">
+        <span class="variant-number">03 / вариант</span>
+        <div class="variant-name">Cyberpunk 2077 HUD</div>
+        <div class="variant-desc">Интерфейс кибер-имплантов. Жёлтый, острые углы, голографическое мерцание.</div>
+        <span class="variant-accent">◈</span>
+      </a>
+
+      <a href="variants/minimalist-darkwave/" class="variant-card">
+        <span class="variant-number">04 / вариант</span>
+        <div class="variant-name">Minimalist Darkwave</div>
+        <div class="variant-desc">Премиум аудио-минимализм. Абсолютный чёрный, тонкие линии, волновая форма.</div>
+        <span class="variant-accent">▬</span>
+      </a>
+
+      <a href="variants/void-forge/" class="variant-card">
+        <span class="variant-number">05 / вариант</span>
+        <div class="variant-name">Void Forge — Техно-гримуар</div>
+        <div class="variant-desc">Кремний встречает магию. Готические орнаменты из печатных плат, ледяной неон.</div>
+        <span class="variant-accent">◆</span>
+      </a>
+    </div>
+
+    <footer>unlog!c &copy; 2026</footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>unlog!c — Cyberpunk Terminal</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Share+Tech+Mono&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --neon-green: #00ff41;
+    --neon-green-dim: #00cc34;
+    --neon-amber: #ffb000;
+    --neon-purple: #b400ff;
+    --bg: #0a0a0a;
+    --text: #c0c0c0;
+    --text-dim: #555;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'JetBrains Mono', 'Share Tech Mono', monospace;
+    min-height: 100vh;
+    line-height: 1.7;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Scanlines */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.15) 2px,
+      rgba(0,0,0,0.15) 4px
+    );
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  /* CRT vignette */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.6) 100%);
+    pointer-events: none;
+    z-index: 998;
+  }
+
+  /* Glitch overlay (invisible by default) */
+  .glitch-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.1s;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    min-height: 100vh;
+  }
+
+  /* Terminal Header */
+  .terminal-header {
+    border-bottom: 1px solid rgba(0,255,65,0.2);
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .terminal-title {
+    font-size: 0.75rem;
+    color: var(--neon-green-dim);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    opacity: 0.7;
+  }
+
+  .logo-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  .logo {
+    font-size: 4rem;
+    font-weight: 700;
+    color: var(--neon-green);
+    text-shadow:
+      0 0 7px var(--neon-green),
+      0 0 10px var(--neon-green),
+      0 0 21px var(--neon-green),
+      0 0 42px rgba(0,255,65,0.5),
+      0 0 82px rgba(0,255,65,0.3),
+      0 0 92px rgba(0,255,65,0.2);
+    letter-spacing: 0.05em;
+    animation: flicker 3s infinite alternate;
+    position: relative;
+  }
+
+  @keyframes flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+      text-shadow:
+        0 0 7px var(--neon-green),
+        0 0 10px var(--neon-green),
+        0 0 21px var(--neon-green),
+        0 0 42px rgba(0,255,65,0.5),
+        0 0 82px rgba(0,255,65,0.3),
+        0 0 92px rgba(0,255,65,0.2);
+    }
+    20%, 24%, 55% {
+      text-shadow:
+        0 0 2px var(--neon-green),
+        0 0 4px var(--neon-green),
+        0 0 8px rgba(0,255,65,0.3);
+    }
+  }
+
+  /* Glitch clone layers */
+  .logo-glitch {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    font-size: 4rem;
+    font-weight: 700;
+    color: var(--neon-green);
+    pointer-events: none;
+    letter-spacing: 0.05em;
+  }
+  .logo-glitch.red {
+    color: #ff0040;
+    animation: glitchRed 3s infinite;
+  }
+  .logo-glitch.blue {
+    color: #0040ff;
+    animation: glitchBlue 3s infinite;
+  }
+
+  @keyframes glitchRed {
+    0%, 95%, 100% { opacity: 0; transform: translate(0); }
+    96% { opacity: 0.6; transform: translate(-3px, 2px); clip-path: inset(20% 0 60% 0); }
+    97% { opacity: 0.4; transform: translate(2px, -1px); clip-path: inset(60% 0 20% 0); }
+    98% { opacity: 0.3; transform: translate(0); clip-path: inset(20% 0 40% 0); }
+  }
+  @keyframes glitchBlue {
+    0%, 95%, 100% { opacity: 0; transform: translate(0); }
+    96% { opacity: 0.6; transform: translate(3px, -2px); clip-path: inset(40% 0 40% 0); }
+    97% { opacity: 0.4; transform: translate(-2px, 1px); clip-path: inset(30% 0 30% 0); }
+    98% { opacity: 0.3; transform: translate(0); clip-path: inset(50% 0 20% 0); }
+  }
+
+  .prompt-sign {
+    color: var(--neon-green);
+    opacity: 0.9;
+  }
+  .prompt-path {
+    color: var(--neon-amber);
+    opacity: 0.7;
+  }
+
+  .quote-block {
+    margin-top: 1rem;
+    padding: 0.8rem 1rem;
+    border-left: 2px solid var(--neon-purple);
+    background: rgba(180,0,255,0.05);
+    font-style: italic;
+    color: #aaa;
+    font-size: 0.9rem;
+  }
+  .quote-block .cursor {
+    display: inline-block;
+    width: 10px;
+    height: 1.1em;
+    background: var(--neon-green);
+    animation: blink 1s step-end infinite;
+    vertical-align: text-bottom;
+    margin-left: 2px;
+  }
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+
+  /* Sections */
+  .section {
+    margin-bottom: 2.5rem;
+    padding: 1rem 1.2rem;
+    border: 1px solid rgba(0,255,65,0.1);
+    background: rgba(0,255,65,0.02);
+    position: relative;
+  }
+
+  .section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,255,65,0.3), transparent);
+  }
+
+  .section-label {
+    font-size: 0.7rem;
+    color: var(--neon-green-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 1rem;
+  }
+
+  .section-label::before {
+    content: '$ ';
+    color: var(--neon-amber);
+  }
+
+  .section h2 {
+    font-size: 1.5rem;
+    color: var(--neon-green);
+    margin-bottom: 1rem;
+    text-shadow: 0 0 5px rgba(0,255,65,0.3);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  .section p {
+    color: #999;
+    font-size: 0.85rem;
+    line-height: 1.8;
+    margin-bottom: 0.8rem;
+  }
+
+  .section .highlight {
+    color: var(--neon-green);
+    text-shadow: 0 0 3px rgba(0,255,65,0.3);
+  }
+  .section .highlight-amber {
+    color: var(--neon-amber);
+    text-shadow: 0 0 3px rgba(255,176,0,0.3);
+  }
+  .section .highlight-purple {
+    color: var(--neon-purple);
+    text-shadow: 0 0 3px rgba(180,0,255,0.3);
+  }
+
+  /* ASCII separator */
+  .ascii-sep {
+    color: var(--neon-green-dim);
+    opacity: 0.4;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-align: center;
+    margin: 1.5rem 0;
+    user-select: none;
+  }
+
+  /* Work card */
+  .work-card {
+    border: 1px solid rgba(0,255,65,0.15);
+    background: rgba(0,0,0,0.4);
+    padding: 1.5rem;
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  .work-cover {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border: 2px solid rgba(0,255,65,0.3);
+    image-rendering: pixelated;
+  }
+
+  .work-info h3 {
+    color: var(--neon-green);
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 5px rgba(0,255,65,0.2);
+  }
+
+  .work-meta {
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    margin-bottom: 1rem;
+    letter-spacing: 0.05em;
+  }
+
+  /* ASCII Audio Player */
+  .ascii-player {
+    border: 1px solid rgba(0,255,65,0.15);
+    background: rgba(0,0,0,0.5);
+    padding: 0.8rem 1rem;
+    margin-top: 0.8rem;
+    font-size: 0.7rem;
+    color: var(--neon-green-dim);
+  }
+
+  .player-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .player-btn {
+    background: none;
+    border: 1px solid rgba(0,255,65,0.3);
+    color: var(--neon-green);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.7rem;
+    padding: 0.3rem 0.8rem;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .player-btn:hover {
+    background: rgba(0,255,65,0.1);
+    box-shadow: 0 0 8px rgba(0,255,65,0.2);
+  }
+  .player-btn:active {
+    background: rgba(0,255,65,0.2);
+  }
+
+  .player-progress {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.65rem;
+  }
+  .progress-bar {
+    flex: 1;
+    height: 8px;
+    border: 1px solid rgba(0,255,65,0.2);
+    position: relative;
+    cursor: pointer;
+    background: rgba(0,255,65,0.05);
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--neon-green);
+    box-shadow: 0 0 6px var(--neon-green);
+    width: 0%;
+    transition: width 0.1s linear;
+  }
+
+  .player-wave {
+    color: var(--neon-green-dim);
+    opacity: 0.6;
+    font-size: 0.6rem;
+    letter-spacing: 0.05em;
+    margin-top: 0.3rem;
+    white-space: pre;
+    overflow: hidden;
+  }
+
+  /* Equipment grid */
+  .gear-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.8rem;
+  }
+  .gear-item {
+    border: 1px solid rgba(0,255,65,0.1);
+    padding: 0.8rem 1rem;
+    font-size: 0.8rem;
+    color: #888;
+  }
+  .gear-item::before {
+    content: '[';
+    color: var(--neon-green-dim);
+  }
+  .gear-item::after {
+    content: ']';
+    color: var(--neon-green-dim);
+  }
+  .gear-item .gear-label {
+    color: var(--neon-amber);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+
+  /* Contacts */
+  .contact-line {
+    font-size: 0.8rem;
+    color: #888;
+    padding: 0.3rem 0;
+  }
+  .contact-line::before {
+    content: '> ';
+    color: var(--neon-green);
+  }
+  .contact-link {
+    color: var(--neon-purple);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .contact-link:hover {
+    color: var(--neon-green);
+    text-shadow: 0 0 5px var(--neon-green);
+  }
+
+  /* Footer */
+  .terminal-footer {
+    border-top: 1px solid rgba(0,255,65,0.1);
+    margin-top: 3rem;
+    padding-top: 1rem;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+  }
+  .terminal-footer .blink-cursor {
+    animation: blink 1s step-end infinite;
+  }
+
+  /* System messages */
+  .sys-msg {
+    color: var(--neon-amber);
+    font-size: 0.7rem;
+    opacity: 0.6;
+  }
+
+  /* Links back */
+  .back-link {
+    display: inline-block;
+    color: var(--neon-green-dim);
+    text-decoration: none;
+    font-size: 0.75rem;
+    border: 1px solid rgba(0,255,65,0.2);
+    padding: 0.4rem 0.8rem;
+    margin-top: 1rem;
+    transition: all 0.2s;
+  }
+  .back-link:hover {
+    background: rgba(0,255,65,0.1);
+    box-shadow: 0 0 8px rgba(0,255,65,0.2);
+    color: var(--neon-green);
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 1rem; }
+    .logo { font-size: 2.5rem; }
+    .logo-glitch { font-size: 2.5rem; }
+    .work-card { grid-template-columns: 1fr; }
+    .work-cover { width: 100%; height: auto; max-width: 200px; }
+    .gear-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- TERMINAL HEADER -->
+    <header class="terminal-header">
+      <div class="terminal-title">
+        █ SYSTEM BOOT v2.0.77 █ ENCRYPTED CHANNEL █
+      </div>
+      <div class="logo-wrapper">
+        <div class="logo-glitch red" aria-hidden="true">unlog!c</div>
+        <div class="logo-glitch blue" aria-hidden="true">unlog!c</div>
+        <h1 class="logo">unlog!c</h1>
+      </div>
+      <div style="margin-top: 0.3rem;">
+        <span class="prompt-sign">root@unlogic:~$</span>
+        <span class="prompt-path"> ./whoami</span>
+      </div>
+      <div class="quote-block">
+        "Музыка — это когда ты превращаешь всё то, что тебя ранит, в красоту"<span class="cursor"></span>
+      </div>
+    </header>
+
+    <div class="ascii-sep">
+      ══════════════════════════════════════════════════════════════
+    </div>
+
+    <!-- ABOUT -->
+    <section class="section">
+      <div class="section-label">cat /sys/about.txt</div>
+      <h2>ОБО_МНЕ</h2>
+      <p>
+        <span class="highlight">composer.load()</span> — пишу музыку под псевдонимом <span class="highlight-amber">unlog!c</span>.
+        Смешиваю холодные технологичные решения с эстетикой оркестровых инструментов.
+      </p>
+      <p>
+        <span class="highlight">instruments[]</span> =
+        {<span class="highlight-amber">фортепиано</span>,
+         <span class="highlight-amber">гитара акустическая</span>,
+         <span class="highlight-amber">гитара электро</span>,
+         <span class="highlight-purple">синтезаторы</span>,
+         <span class="highlight-amber">смычковые</span>,
+         <span class="highlight-amber">духовые</span>}
+      </p>
+      <p>
+        <span class="highlight">style()</span> — электронное звучание × классические инструменты.
+        Холодные синты пронизывают оркестровые аранжировки, как кибер-импланты — живое тело.
+      </p>
+    </section>
+
+    <div class="ascii-sep">
+      ──── ❖ ────
+    </div>
+
+    <!-- WORKS -->
+    <section class="section">
+      <div class="section-label">ls -la /works/</div>
+      <h2>РАБОТЫ</h2>
+
+      <div class="work-card">
+        <img src="../../images/Dark Ages Cover.png" alt="Dark Ages Cover" class="work-cover" loading="lazy">
+        <div class="work-info">
+          <h3>Dark Ages</h3>
+          <div class="work-meta">
+            <span class="sys-msg">[STATUS: RELEASED]</span> &nbsp;|&nbsp; GENRE: darkwave / orchestral
+          </div>
+
+          <!-- ASCII player -->
+          <div class="ascii-player">
+            <div class="player-header">
+              <button class="player-btn play-btn" onclick="togglePlay()" aria-label="Play/Pause">▶ PLAY</button>
+              <span style="opacity:0.6;">track_01.wav</span>
+            </div>
+            <div class="player-progress">
+              <span class="time-current">00:00</span>
+              <div class="progress-bar" id="progressBar">
+                <div class="progress-fill" id="progressFill"></div>
+              </div>
+              <span class="time-duration" id="timeDuration">00:00</span>
+            </div>
+            <div class="player-wave" id="playerWave">
+              ▁ ▂ ▃ ▄ ▅ ▆ ▇ █ ▇ ▆ ▅ ▄ ▃ ▂ ▁ ▂ ▃ ▅ ▆ ▇ █ ▇ ▅ ▃ ▁
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="ascii-sep">
+      ──── ❖ ────
+    </div>
+
+    <!-- TECH / GEAR -->
+    <section class="section">
+      <div class="section-label">lshw -short</div>
+      <h2>ТЕХНОЛОГИИ & ЖЕЛЕЗО</h2>
+      <p>
+        <span class="highlight">stack.trace()</span> — увлекаюсь железом, алгоритмами, автоматизациями.
+        Технологии для меня — не просто инструмент, а способ мышления. Код как партитура,
+        процессор как оркестр.
+      </p>
+      <div class="gear-grid">
+        <div class="gear-item">
+          <span class="gear-label">ЦИФРОВЫЕ СИНТЕЗАТОРЫ</span>
+          serum / vital / pigments
+        </div>
+        <div class="gear-item">
+          <span class="gear-label">ГИТАРНОЕ ОБОРУДОВАНИЕ</span>
+          neural dsp / line 6 helix
+        </div>
+        <div class="gear-item">
+          <span class="gear-label">DAW</span>
+          ableton / logic / reaper
+        </div>
+        <div class="gear-item">
+          <span class="gear-label">ОРКЕСТРОВЫЕ БИБЛИОТЕКИ</span>
+          spitfire / orchestral tools
+        </div>
+        <div class="gear-item">
+          <span class="gear-label">ТЕХНОЛОГИИ</span>
+          python / docker / linux
+        </div>
+        <div class="gear-item">
+          <span class="gear-label">ЖЕЛЕЗО</span>
+          custom builds / servers
+        </div>
+      </div>
+    </section>
+
+    <div class="ascii-sep">
+      ──── ❖ ────
+    </div>
+
+    <!-- CONTACTS -->
+    <section class="section">
+      <div class="section-label">netstat -a | grep contact</div>
+      <h2>СВЯЗЬ</h2>
+      <div class="contact-line">email: <a href="mailto:unlogic@example.com" class="contact-link">unlogic@example.com</a></div>
+      <div class="contact-line">soundcloud: <a href="#" class="contact-link">/unlogic</a></div>
+      <div class="contact-line">bandcamp: <a href="#" class="contact-link">/unlogic</a></div>
+      <div class="contact-line">github: <a href="#" class="contact-link">/unlogic</a></div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="terminal-footer">
+      <span class="sys-msg">[OK]</span> Transmission complete.
+      <span class="blink-cursor">█</span><br>
+      <span style="opacity:0.5;">unlog!c &copy; 2026 — ALL RIGHTS RESERVED</span><br>
+      <a href="../../" class="back-link">← BACK TO VARIANTS</a>
+    </footer>
+  </div>
+
+  <!-- AUDIO ELEMENT -->
+  <audio id="audioPlayer" preload="metadata" style="display:none;">
+    <source src="../../audio/Dark Ages.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const audio = document.getElementById('audioPlayer');
+    const playBtn = document.querySelector('.play-btn');
+    const progressFill = document.getElementById('progressFill');
+    const progressBar = document.getElementById('progressBar');
+    const timeCurrent = document.querySelector('.time-current');
+    const timeDuration = document.getElementById('timeDuration');
+    const playerWave = document.getElementById('playerWave');
+
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = Math.floor(seconds % 60);
+      return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+    }
+
+    audio.addEventListener('loadedmetadata', () => {
+      timeDuration.textContent = formatTime(audio.duration);
+    });
+
+    audio.addEventListener('timeupdate', () => {
+      const pct = (audio.currentTime / audio.duration) * 100 || 0;
+      progressFill.style.width = pct + '%';
+      timeCurrent.textContent = formatTime(audio.currentTime);
+
+      // Animate wave
+      const bars = ['▁','▂','▃','▄','▅','▆','▇','█'];
+      let waveStr = '';
+      const t = audio.currentTime * 10;
+      for (let i = 0; i < 30; i++) {
+        const val = Math.sin(t + i * 0.5) * 0.5 + 0.5;
+        const idx = Math.floor(val * (bars.length - 1));
+        waveStr += bars[idx] + ' ';
+      }
+      playerWave.textContent = waveStr;
+    });
+
+    progressBar.addEventListener('click', (e) => {
+      const rect = progressBar.getBoundingClientRect();
+      const pct = (e.clientX - rect.left) / rect.width;
+      audio.currentTime = pct * audio.duration;
+    });
+
+    function togglePlay() {
+      if (audio.paused) {
+        audio.play();
+        playBtn.textContent = '⏸ PAUSE';
+      } else {
+        audio.pause();
+        playBtn.textContent = '▶ PLAY';
+      }
+    }
+
+    audio.addEventListener('ended', () => {
+      playBtn.textContent = '▶ PLAY';
+    });
+  </script>
+</body>
+</html>

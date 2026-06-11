@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>unlog!c — Void Forge</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cyan: #00d4ff;
+    --cyan-glow: rgba(0,212,255,0.4);
+    --cyan-dim: #006880;
+    --purple: #7b2fbe;
+    --purple-glow: rgba(123,47,190,0.4);
+    --magenta: #b8297e;
+    --bg: #04060d;
+    --bg-card: #080b16;
+    --text: #c0c8d8;
+    --text-bright: #e0e6f0;
+    --text-dim: #4a5068;
+    --border: rgba(0,212,255,0.08);
+    --border-bright: rgba(0,212,255,0.15);
+    --gold: #8b7355;
+    --gold-bright: #c9a84c;
+    --circuit: rgba(0,212,255,0.05);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Cormorant Garamond', serif;
+    min-height: 100vh;
+    line-height: 1.9;
+    overflow-x: hidden;
+    font-weight: 400;
+  }
+
+  /* Deep ambient radial glow */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -40%;
+    left: -40%;
+    width: 180%;
+    height: 180%;
+    background:
+      radial-gradient(ellipse at 30% 20%, var(--cyan-glow) 0%, transparent 40%),
+      radial-gradient(ellipse at 70% 60%, var(--purple-glow) 0%, transparent 40%),
+      radial-gradient(ellipse at 50% 80%, rgba(184,41,126,0.08) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+    animation: ambientBreath 8s ease-in-out infinite alternate;
+  }
+  @keyframes ambientBreath {
+    0% { opacity: 0.6; }
+    100% { opacity: 1; }
+  }
+
+  /* Circuit trace background */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%2300d4ff' stroke-width='0.3' stroke-opacity='0.04'%3E%3Cpath d='M0,60 Q30,30 60,60 T120,60'/%3E%3Cpath d='M60,0 Q30,30 60,60 T60,120'/%3E%3Ccircle cx='60' cy='60' r='2'/%3E%3Ccircle cx='0' cy='60' r='1.5'/%3E%3Ccircle cx='120' cy='60' r='1.5'/%3E%3Ccircle cx='60' cy='0' r='1.5'/%3E%3Ccircle cx='60' cy='120' r='1.5'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    min-height: 100vh;
+  }
+
+  /* ========== HERO ========== */
+  .hero {
+    text-align: center;
+    padding: 3rem 0 4rem;
+    position: relative;
+  }
+
+  /* Rune ring around the name */
+  .rune-ring {
+    display: inline-block;
+    position: relative;
+    padding: 1.5rem 3rem;
+  }
+  .rune-ring::before,
+  .rune-ring::after {
+    content: '◆ ◇ ◆';
+    font-size: 0.5rem;
+    letter-spacing: 1em;
+    color: var(--cyan-dim);
+    display: block;
+    font-family: serif;
+  }
+
+  .hero h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 4.5rem;
+    font-weight: 800;
+    background: linear-gradient(180deg,
+      rgba(0,212,255,1) 0%,
+      rgba(0,212,255,0.7) 25%,
+      rgba(200,180,100,0.9) 50%,
+      rgba(123,47,190,0.8) 75%,
+      rgba(0,212,255,0.9) 100%
+    );
+    background-size: 100% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: voidShimmer 6s ease-in-out infinite;
+    letter-spacing: 0.08em;
+    line-height: 1.1;
+  }
+
+  @keyframes voidShimmer {
+    0%, 100% { background-position: 0% 0%; }
+    50% { background-position: 0% 100%; }
+  }
+
+  .hero-tagline {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--cyan);
+    text-transform: uppercase;
+    letter-spacing: 0.35em;
+    margin-top: 0.5rem;
+    opacity: 0.6;
+    text-shadow: 0 0 8px rgba(0,212,255,0.3);
+  }
+
+  /* Ornamental divider */
+  .void-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin: 1rem 0;
+    opacity: 0.5;
+  }
+  .void-divider span {
+    width: 30px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--cyan-dim), transparent);
+  }
+  .void-divider .sigil {
+    font-size: 0.8rem;
+    color: var(--gold-bright);
+    text-shadow: 0 0 6px rgba(201,168,76,0.4);
+  }
+
+  .hero-quote {
+    margin-top: 1.5rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    font-style: italic;
+    color: var(--text-dim);
+    max-width: 550px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.8;
+    position: relative;
+    font-weight: 300;
+  }
+  .hero-quote::before,
+  .hero-quote::after {
+    content: '❦';
+    display: block;
+    font-style: normal;
+    font-size: 1.2rem;
+    color: var(--gold);
+    text-align: center;
+    margin: 0.5rem 0;
+    opacity: 0.4;
+  }
+
+  /* ========== SECTION PANELS ========== */
+  .void-section {
+    margin-bottom: 3rem;
+    position: relative;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 1px;
+    padding: 0;
+    overflow: hidden;
+    box-shadow:
+      0 0 30px rgba(0,0,0,0.5),
+      inset 0 1px 0 rgba(0,212,255,0.02);
+  }
+
+  /* Gothic arch top accent */
+  .void-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg,
+      transparent,
+      var(--cyan-dim) 15%,
+      var(--purple) 30%,
+      var(--gold-bright) 50%,
+      var(--purple) 70%,
+      var(--cyan-dim) 85%,
+      transparent
+    );
+    opacity: 0.7;
+  }
+
+  .section-head {
+    padding: 1.5rem 2rem 0;
+  }
+
+  .section-runenum {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--cyan-dim);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .section-head h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-bright);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .section-head h2 span {
+    background: linear-gradient(135deg, var(--cyan), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .section-body {
+    padding: 1.2rem 2rem 2rem;
+  }
+
+  .section-body p {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    line-height: 2;
+    margin-bottom: 0.7rem;
+  }
+
+  .section-body p .glow {
+    color: var(--cyan);
+    font-weight: 500;
+    text-shadow: 0 0 5px rgba(0,212,255,0.2);
+  }
+  .section-body p .gold {
+    color: var(--gold-bright);
+    font-weight: 500;
+  }
+  .section-body p .purple {
+    color: var(--magenta);
+    font-weight: 500;
+  }
+
+  /* ========== SKILL RUNES ========== */
+  .rune-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 1rem;
+  }
+  .rune-cell {
+    background: var(--bg-card);
+    padding: 0.8rem 0.7rem;
+    text-align: center;
+    position: relative;
+  }
+  .rune-cell .rune-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.3rem;
+    filter: drop-shadow(0 0 4px rgba(0,212,255,0.3));
+  }
+  .rune-cell .rune-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--cyan);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    display: block;
+    margin-bottom: 0.15rem;
+  }
+  .rune-cell .rune-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    font-style: italic;
+  }
+
+  /* ========== WORK CARD - The Grimoire Entry ========== */
+  .grimoire-entry {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 1.5rem;
+    background: rgba(0,0,0,0.6);
+    border: 1px solid var(--border-bright);
+    padding: 1.2rem;
+    position: relative;
+  }
+  .grimoire-entry::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    right: -1px;
+    width: 20px;
+    height: 20px;
+    border-top: 1px solid var(--gold);
+    border-left: 1px solid var(--gold);
+    opacity: 0.3;
+  }
+
+  .grimoire-cover {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border: 2px solid rgba(201,168,76,0.3);
+    filter: sepia(0.3) brightness(0.7) contrast(1.1);
+    transition: all 0.5s ease;
+  }
+  .grimoire-entry:hover .grimoire-cover {
+    border-color: rgba(201,168,76,0.6);
+    filter: sepia(0.1) brightness(0.9) contrast(1);
+    box-shadow: 0 0 20px rgba(201,168,76,0.2);
+  }
+
+  .grimoire-info h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--gold-bright);
+    letter-spacing: 0.06em;
+    margin-bottom: 0.2rem;
+  }
+
+  .grimoire-class {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--cyan-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 0.8rem;
+  }
+
+  /* Void Forge player */
+  .forge-player {
+    border: 1px solid rgba(0,212,255,0.06);
+    padding: 0.8rem;
+    background: rgba(4,6,13,0.8);
+    position: relative;
+  }
+
+  .forge-ctrl-row {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .forge-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    background: rgba(0,212,255,0.05);
+    border: 1px solid var(--cyan-dim);
+    color: var(--cyan);
+    cursor: pointer;
+    padding: 0.35rem 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .forge-btn::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    background: linear-gradient(135deg, var(--cyan-dim), var(--purple));
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: -1;
+  }
+  .forge-btn:hover::before {
+    opacity: 0.3;
+  }
+  .forge-btn:hover {
+    border-color: var(--cyan);
+    box-shadow: 0 0 15px rgba(0,212,255,0.2), inset 0 0 15px rgba(0,212,255,0.05);
+    text-shadow: 0 0 6px rgba(0,212,255,0.5);
+  }
+  .forge-btn:active {
+    background: rgba(0,212,255,0.1);
+  }
+
+  .forge-track-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+  }
+
+  .forge-progress-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .forge-time {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--text-dim);
+    min-width: 36px;
+  }
+
+  .forge-progress {
+    flex: 1;
+    height: 3px;
+    background: rgba(0,212,255,0.05);
+    border: 1px solid rgba(0,212,255,0.1);
+    cursor: pointer;
+    position: relative;
+  }
+  .forge-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--purple), var(--cyan));
+    box-shadow: 0 0 8px rgba(0,212,255,0.4);
+    width: 0%;
+    transition: width 0.1s linear;
+  }
+
+  /* Circular runes visualizer */
+  .rune-visualizer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    height: 24px;
+    margin-top: 0.4rem;
+    opacity: 0.4;
+  }
+  .rune-viz-dot {
+    width: 3px;
+    height: 3px;
+    background: var(--cyan);
+    border-radius: 50%;
+    transition: all 0.08s ease;
+    box-shadow: 0 0 3px rgba(0,212,255,0.5);
+  }
+
+  /* ========== CONTACTS ========== */
+  .sigil-contacts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  .sigil-link {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--cyan-dim);
+    text-decoration: none;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.3rem 0;
+    transition: all 0.3s;
+    border-bottom: 1px solid transparent;
+    position: relative;
+  }
+  .sigil-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--cyan);
+    transition: width 0.3s;
+  }
+  .sigil-link:hover {
+    color: var(--cyan);
+    text-shadow: 0 0 6px rgba(0,212,255,0.4);
+  }
+  .sigil-link:hover::after {
+    width: 100%;
+  }
+  .sigil-sep {
+    font-size: 0.5rem;
+    color: var(--gold);
+    opacity: 0.3;
+  }
+
+  /* ========== FOOTER ========== */
+  .forge-footer {
+    margin-top: 4rem;
+    padding: 2rem;
+    text-align: center;
+    border-top: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+  }
+  .forge-footer .rune {
+    font-family: serif;
+    color: var(--gold-bright);
+    font-size: 0.7rem;
+    margin: 0 0.5rem;
+  }
+
+  .back-sigil {
+    display: inline-block;
+    margin-top: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--text-dim);
+    text-decoration: none;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.4rem 1rem;
+    border: 1px solid var(--border);
+    transition: all 0.3s;
+  }
+  .back-sigil:hover {
+    border-color: var(--cyan);
+    color: var(--cyan);
+    box-shadow: 0 0 10px rgba(0,212,255,0.1);
+  }
+
+  @media (max-width: 650px) {
+    .container { padding: 2rem 1rem; }
+    .hero h1 { font-size: 2.8rem; }
+    .rune-ring { padding: 1rem 1.5rem; }
+    .grimoire-entry { grid-template-columns: 1fr; }
+    .grimoire-cover { width: 100%; height: auto; max-width: 200px; }
+    .rune-grid { grid-template-columns: repeat(2, 1fr); }
+    .section-head, .section-body { padding-left: 1.2rem; padding-right: 1.2rem; }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- HERO -->
+    <header class="hero">
+      <div class="rune-ring">
+        <h1>unlog!c</h1>
+        <div class="hero-tagline">void forge · audio alchemy</div>
+      </div>
+
+      <div class="void-divider">
+        <span></span><span class="sigil">⚙</span><span></span><span class="sigil">✦</span><span></span><span class="sigil">⚙</span><span></span>
+      </div>
+
+      <p class="hero-quote">
+        "Музыка — это когда ты превращаешь всё то, что тебя ранит, в красоту"
+      </p>
+    </header>
+
+    <!-- ABOUT -->
+    <section class="void-section">
+      <div class="section-head">
+        <div class="section-runenum">[ grimoire entry · 01 ]</div>
+        <h2> Forger of <span>Sound</span></h2>
+      </div>
+      <div class="section-body">
+        <p>
+          <span class="glow">unlog!c</span> — алхимия звука на стыке 
+          <span class="glow">кремния</span> и <span class="gold">магии</span>.
+          В этой кузнице холодные технологичные решения сплавляются 
+          с эстетикой оркестровых инструментов.
+        </p>
+        <p>
+          Фортепиано, акустическая и электрогитара, синтезаторы,
+          смычковые и духовые — сырьё, из которого куётся мир 
+          <span class="purple">unlog!c</span>.
+          Электронные импульсы пронизывают классические инструменты,
+          как магия — древний манускрипт.
+        </p>
+        <div class="rune-grid">
+          <div class="rune-cell">
+            <div class="rune-icon">🎹</div>
+            <span class="rune-label">Piano</span>
+            <span class="rune-val">Grand / Upright</span>
+          </div>
+          <div class="rune-cell">
+            <div class="rune-icon">🎸</div>
+            <span class="rune-label">Guitar</span>
+            <span class="rune-val">Acoustic / Elec</span>
+          </div>
+          <div class="rune-cell">
+            <div class="rune-icon">🔮</div>
+            <span class="rune-label">Synths</span>
+            <span class="rune-val">Serum · Vital</span>
+          </div>
+          <div class="rune-cell">
+            <div class="rune-icon">🎻</div>
+            <span class="rune-label">Strings</span>
+            <span class="rune-val">Orchestral</span>
+          </div>
+          <div class="rune-cell">
+            <div class="rune-icon">🎺</div>
+            <span class="rune-label">Brass</span>
+            <span class="rune-val">Cinematic</span>
+          </div>
+          <div class="rune-cell">
+            <div class="rune-icon">🌑</div>
+            <span class="rune-label">Darkwave</span>
+            <span class="rune-val">Cyber-Orch</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WORK -->
+    <section class="void-section">
+      <div class="section-head">
+        <div class="section-runenum">[ grimoire entry · 02 ]</div>
+        <h2> Dark <span>Ages</span></h2>
+      </div>
+      <div class="section-body">
+        <div class="grimoire-entry">
+          <img src="../../images/Dark Ages Cover.png" alt="Dark Ages Cover" class="grimoire-cover" loading="lazy">
+          <div class="grimoire-info">
+            <h3>Dark Ages</h3>
+            <div class="grimoire-class">opus i · darkwave/orchestral · void-forge</div>
+
+            <!-- Void Forge player -->
+            <div class="forge-player">
+              <div class="forge-ctrl-row">
+                <button class="forge-btn play-btn-f" onclick="togglePlayF()">▶ Invoke</button>
+                <span class="forge-track-label">// spectral_stream_01.essence</span>
+              </div>
+              <div class="forge-progress-row">
+                <span class="forge-time time-cur-f">0:00</span>
+                <div class="forge-progress" id="forgeProgress">
+                  <div class="forge-progress-fill" id="forgeProgressFill"></div>
+                </div>
+                <span class="forge-time time-dur-f">0:00</span>
+              </div>
+              <div class="rune-visualizer" id="runeViz"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TECH -->
+    <section class="void-section">
+      <div class="section-head">
+        <div class="section-runenum">[ grimoire entry · 03 ]</div>
+        <h2> The <span>Forge</span> Arsenal</h2>
+      </div>
+      <div class="section-body">
+        <p>
+          Технологии — не просто инструмент, а продолжение воли творца.
+          Код как руны, процессор как кузница, алгоритмы как заклинания.
+        </p>
+        <div class="rune-grid">
+          <div class="rune-cell">
+            <div class="rune-icon">🖥️</div>
+            <span class="rune-label">DAW Core</span>
+            <span class="rune-val">Ableton / Logic / Reaper</span>
+          </div>
+          <div class="rune-cell">
+            <div class="rune-icon">⚡</div>
+            <span class="rune-label">Guitar Rig</span>
+            <span class="rune-val">Neural DSP / Helix</span>
+          </div>
+          <div class="rune-cell">
+            <div class="rune-icon">📜</div>
+            <span class="rune-label">Orchestra</span>
+            <span class="rune-val">Spitfire / OT</span>
+          </div>
+          <div class="rune-cell">
+            <div class="rune-icon">🐍</div>
+            <span class="rune-label">Tech Stack</span>
+            <span class="rune-val">Python · Docker · Linux</span>
+          </div>
+          <div class="rune-cell">
+            <div class="rune-icon">⚙️</div>
+            <span class="rune-label">Hardware</span>
+            <span class="rune-val">Custom · Servers</span>
+          </div>
+          <div class="rune-cell">
+            <div class="rune-icon">🤖</div>
+            <span class="rune-label">Automation</span>
+            <span class="rune-val">Scripts · CI/CD</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACTS -->
+    <section class="void-section">
+      <div class="section-head">
+        <div class="section-runenum">[ grimoire entry · 04 ]</div>
+        <h2> Sigil <span>Links</span></h2>
+      </div>
+      <div class="section-body">
+        <div class="sigil-contacts">
+          <a href="mailto:unlogic@example.com" class="sigil-link">📧 Email</a>
+          <span class="sigil-sep">◆</span>
+          <a href="#" class="sigil-link">SoundCloud</a>
+          <span class="sigil-sep">◆</span>
+          <a href="#" class="sigil-link">Bandcamp</a>
+          <span class="sigil-sep">◆</span>
+          <a href="#" class="sigil-link">GitHub</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="forge-footer">
+      <span class="rune">⚙</span> unlog!c · anno MMXXVI <span class="rune">⚙</span><br>
+      forged in the void between silicon and soul<br>
+      <a href="../../" class="back-sigil">← return to the hub</a>
+    </footer>
+  </div>
+
+  <audio id="audioF" preload="metadata" style="display:none;">
+    <source src="../../audio/Dark Ages.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const audioF = document.getElementById('audioF');
+    const playBtnF = document.querySelector('.play-btn-f');
+    const progressFillF = document.getElementById('forgeProgressFill');
+    const progressBarF = document.getElementById('forgeProgress');
+    const timeCurF = document.querySelector('.time-cur-f');
+    const timeDurF = document.querySelector('.time-dur-f');
+    const runeViz = document.getElementById('runeViz');
+
+    function fmtF(t) {
+      const m = Math.floor(t / 60);
+      const s = Math.floor(t % 60);
+      return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+    }
+
+    // Build rune visualizer dots
+    for (let i = 0; i < 50; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'rune-viz-dot';
+      runeViz.appendChild(dot);
+    }
+
+    audioF.addEventListener('loadedmetadata', () => {
+      timeDurF.textContent = fmtF(audioF.duration);
+    });
+
+    audioF.addEventListener('timeupdate', () => {
+      const pct = (audioF.currentTime / audioF.duration) * 100 || 0;
+      progressFillF.style.width = pct + '%';
+      timeCurF.textContent = fmtF(audioF.currentTime);
+
+      const dots = runeViz.children;
+      const t = audioF.currentTime * 10;
+      for (let i = 0; i < dots.length; i++) {
+        const angle = t + (i / dots.length) * Math.PI * 2;
+        const val = (Math.sin(angle * 1.3) + Math.cos(angle * 0.7 + Math.sin(t * 0.5))) / 2;
+        const scale = 0.5 + Math.abs(val) * 2.5;
+        dots[i].style.transform = `scale(${scale})`;
+        dots[i].style.opacity = 0.2 + Math.abs(val) * 0.8;
+        dots[i].style.background = val > 0
+          ? 'var(--cyan)'
+          : 'var(--purple)';
+        dots[i].style.boxShadow = val > 0
+          ? `0 0 ${Math.abs(val) * 6}px rgba(0,212,255,0.6)`
+          : `0 0 ${Math.abs(val) * 6}px rgba(123,47,190,0.6)`;
+      }
+    });
+
+    progressBarF.addEventListener('click', (e) => {
+      const rect = progressBarF.getBoundingClientRect();
+      audioF.currentTime = ((e.clientX - rect.left) / rect.width) * audioF.duration;
+    });
+
+    function togglePlayF() {
+      if (audioF.paused) {
+        audioF.play();
+        playBtnF.textContent = '⏸ Banish';
+      } else {
+        audioF.pause();
+        playBtnF.textContent = '▶ Invoke';
+      }
+    }
+
+    audioF.addEventListener('ended', () => {
+      playBtnF.textContent = '▶ Invoke';
+    });
+  </script>
+</body>
+</html>

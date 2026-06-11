@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>unlog!c — Minimalist Darkwave</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=Space+Mono:wght@400;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #000000;
+    --text-primary: #e0e0e0;
+    --text-secondary: #707070;
+    --text-dim: #3a3a3a;
+    --border: rgba(255,255,255,0.06);
+    --accent: #ffffff;
+    --wave-color: #1a1a1a;
+    --hover: rgba(255,255,255,0.04);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text-secondary);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    line-height: 1.8;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    overflow-x: hidden;
+  }
+
+  /* Ultra-subtle grain texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.015'/%3E%3C/svg%3E");
+    background-size: 256px 256px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    min-height: 100vh;
+  }
+
+  /* ========== HERO ========== */
+  .hero {
+    text-align: center;
+    padding: 3rem 0 5rem;
+    position: relative;
+  }
+
+  .hero h1 {
+    font-family: 'Inter', sans-serif;
+    font-size: 3.5rem;
+    font-weight: 200;
+    color: var(--text-primary);
+    letter-spacing: 0.15em;
+    text-transform: lowercase;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 span {
+    font-weight: 600;
+  }
+
+  .hero-divider {
+    width: 40px;
+    height: 1px;
+    background: var(--text-secondary);
+    margin: 0 auto 1.5rem;
+    opacity: 0.5;
+  }
+
+  .hero-quote {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    font-weight: 300;
+    font-style: italic;
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.7;
+    letter-spacing: 0.04em;
+  }
+
+  /* ========== SECTION ========== */
+  .section {
+    margin-bottom: 4rem;
+    position: relative;
+  }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .section h2 {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 300;
+    color: var(--text-primary);
+    letter-spacing: 0.08em;
+    margin-bottom: 1rem;
+  }
+
+  .section p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 2;
+    margin-bottom: 0.8rem;
+    font-weight: 300;
+  }
+
+  .section .accent {
+    color: var(--text-primary);
+    font-weight: 400;
+  }
+
+  /* ========== WAVE SEPARATOR ========== */
+  .wave-separator {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 1px;
+    height: 40px;
+    margin: 2rem 0;
+    opacity: 0.3;
+  }
+  .wave-bar {
+    width: 2px;
+    background: var(--text-dim);
+    transition: height 0.3s ease;
+    border-radius: 1px;
+  }
+
+  /* ========== WORK CARD ========== */
+  .work-card {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 2.5rem;
+    padding: 2rem 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .work-cover-container {
+    position: relative;
+  }
+
+  .work-cover {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    filter: grayscale(1) brightness(0.6);
+    transition: all 0.6s ease;
+  }
+  .work-card:hover .work-cover {
+    filter: grayscale(0.5) brightness(0.85);
+  }
+
+  .work-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .work-info h3 {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: var(--text-primary);
+    letter-spacing: 0.08em;
+    margin-bottom: 0.3rem;
+  }
+
+  .work-meta {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Minimal player */
+  .minimal-player {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .play-btn-mini {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--text-dim);
+    background: none;
+    cursor: pointer;
+    color: var(--text-primary);
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+  }
+  .play-btn-mini:hover {
+    border-color: var(--text-primary);
+    background: var(--hover);
+  }
+
+  .player-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .player-track-name {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 300;
+    margin-bottom: 0.4rem;
+  }
+
+  .mini-progress {
+    height: 1px;
+    background: var(--border);
+    cursor: pointer;
+    position: relative;
+  }
+  .mini-progress-fill {
+    height: 100%;
+    background: var(--text-secondary);
+    width: 0%;
+    transition: width 0.1s linear;
+  }
+
+  .player-times {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.5rem;
+    color: var(--text-dim);
+    margin-top: 0.3rem;
+  }
+
+  /* Subtle waveform visualizer */
+  .mini-waveform {
+    display: flex;
+    align-items: flex-end;
+    gap: 1px;
+    height: 16px;
+    margin-top: 0.4rem;
+    opacity: 0.3;
+  }
+  .mini-waveform .mw-bar {
+    width: 2px;
+    background: var(--text-secondary);
+    transition: height 0.08s ease;
+    min-height: 1px;
+    border-radius: 1px;
+  }
+
+  /* ========== TECH GRID ========== */
+  .tech-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  .tech-item {
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .tech-item:nth-child(odd) {
+    padding-right: 1.5rem;
+  }
+  .tech-item:nth-child(even) {
+    padding-left: 1.5rem;
+    border-left: 1px solid var(--border);
+  }
+
+  .tech-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+  .tech-value {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: 300;
+  }
+
+  /* ========== CONTACTS ========== */
+  .contacts-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+  .contact-link {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    text-decoration: none;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+    position: relative;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s, color 0.3s;
+  }
+  .contact-link:hover {
+    color: var(--text-primary);
+    border-bottom-color: var(--text-secondary);
+  }
+
+  /* ========== FOOTER ========== */
+  .page-footer {
+    margin-top: 5rem;
+    padding-top: 2rem;
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--text-dim);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .page-footer .dot {
+    color: var(--text-secondary);
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-top: 1.5rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--text-dim);
+    text-decoration: none;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 0.2rem;
+  }
+  .back-link:hover {
+    color: var(--text-primary);
+    border-bottom-color: var(--text-dim);
+  }
+
+  @media (max-width: 650px) {
+    .container { padding: 2rem 1.5rem; }
+    .hero h1 { font-size: 2.2rem; }
+    .work-card { grid-template-columns: 1fr; gap: 1.5rem; }
+    .work-cover { width: 100%; height: auto; max-width: 250px; }
+    .tech-list { grid-template-columns: 1fr; }
+    .tech-item:nth-child(even) { border-left: none; padding-left: 0; }
+    .tech-item:nth-child(odd) { padding-right: 0; }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- HERO -->
+    <header class="hero">
+      <h1>un<span>log!</span>c</h1>
+      <div class="hero-divider"></div>
+      <p class="hero-quote">
+        "Музыка — это когда ты превращаешь всё то, что тебя ранит, в красоту"
+      </p>
+    </header>
+
+    <!-- Random static wave separator -->
+    <div class="wave-separator" id="waveSep"></div>
+
+    <!-- ABOUT -->
+    <section class="section">
+      <div class="section-label">обо мне</div>
+      <h2>Звуковой архитектор</h2>
+      <p>
+        Пишу музыку под псевдонимом <span class="accent">unlog!c</span> — 
+        пространство, где <span class="accent">холодные технологичные решения</span> 
+        встречаются с эстетикой оркестровых инструментов.
+      </p>
+      <p>
+        Фортепиано и гитара — с детства. Синтезаторы, смычковые, духовые — 
+        материал, из которого строится мир <span class="accent">unlog!c</span>. 
+        Электронное звучание пронизывает классические инструменты, 
+        как цифровой сигнал — аналоговый тракт.
+      </p>
+    </section>
+
+    <!-- WORK -->
+    <section class="section">
+      <div class="section-label">работа</div>
+      <h2>Dark Ages</h2>
+
+      <div class="work-card">
+        <div class="work-cover-container">
+          <img src="../../images/Dark Ages Cover.png" alt="Dark Ages Cover" class="work-cover" loading="lazy">
+        </div>
+        <div class="work-info">
+          <div class="work-meta">op. I &nbsp;·&nbsp; darkwave / orchestral</div>
+
+          <div class="minimal-player">
+            <button class="play-btn-mini play-btn-m" onclick="togglePlayM()" aria-label="Play/Pause">▶</button>
+            <div class="player-info">
+              <div class="player-track-name">Dark Ages — unlog!c</div>
+              <div class="mini-progress" id="miniProgress">
+                <div class="mini-progress-fill" id="miniProgressFill"></div>
+              </div>
+              <div class="player-times">
+                <span class="time-cur-m">0:00</span>
+                <span class="time-dur-m">0:00</span>
+              </div>
+              <div class="mini-waveform" id="miniWaveform"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TECH -->
+    <section class="section">
+      <div class="section-label">технологии & инструменты</div>
+      <h2>Стек</h2>
+      <p>
+        Технологии для меня — не просто инструмент, а способ мышления. 
+        Код как партитура, процессор как оркестр.
+      </p>
+      <div class="tech-list">
+        <div class="tech-item">
+          <span class="tech-label">синтезаторы</span>
+          <span class="tech-value">Serum, Vital, Pigments</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-label">гитара</span>
+          <span class="tech-value">Neural DSP, Line 6 Helix</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-label">daw</span>
+          <span class="tech-value">Ableton Live, Logic Pro, Reaper</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-label">оркестр</span>
+          <span class="tech-value">Spitfire, Orchestral Tools</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-label">инструменты</span>
+          <span class="tech-value">Фортепиано, гитара акустическая / электро</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-label">технологии</span>
+          <span class="tech-value">Python, Docker, Linux, автоматизации</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-label">железо</span>
+          <span class="tech-value">Custom builds, серверы, аудио-интерфейсы</span>
+        </div>
+        <div class="tech-item">
+          <!-- placeholder for grid alignment -->
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACTS -->
+    <section class="section">
+      <div class="section-label">связь</div>
+      <div class="contacts-row">
+        <a href="mailto:unlogic@example.com" class="contact-link">email</a>
+        <a href="#" class="contact-link">soundcloud</a>
+        <a href="#" class="contact-link">bandcamp</a>
+        <a href="#" class="contact-link">github</a>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="page-footer">
+      unlog!c <span class="dot">·</span> 2026<br>
+      <a href="../../" class="back-link">← ко всем вариантам</a>
+    </footer>
+  </div>
+
+  <audio id="audioM" preload="metadata" style="display:none;">
+    <source src="../../audio/Dark Ages.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    // Static wave separator
+    const waveSep = document.getElementById('waveSep');
+    for (let i = 0; i < 80; i++) {
+      const bar = document.createElement('div');
+      bar.className = 'wave-bar';
+      bar.style.height = (Math.abs(Math.sin(i * 0.3) * 18 + Math.sin(i * 0.7) * 8) + 4) + 'px';
+      waveSep.appendChild(bar);
+    }
+
+    // Audio player
+    const audioM = document.getElementById('audioM');
+    const playBtnM = document.querySelector('.play-btn-m');
+    const progressFillM = document.getElementById('miniProgressFill');
+    const progressBarM = document.getElementById('miniProgress');
+    const timeCurM = document.querySelector('.time-cur-m');
+    const timeDurM = document.querySelector('.time-dur-m');
+    const miniWave = document.getElementById('miniWaveform');
+
+    function fmtM(t) {
+      const m = Math.floor(t / 60);
+      const s = Math.floor(t % 60);
+      return m + ':' + String(s).padStart(2, '0');
+    }
+
+    // Build mini waveform bars
+    for (let i = 0; i < 80; i++) {
+      const wb = document.createElement('div');
+      wb.className = 'mw-bar';
+      wb.style.height = (Math.sin(i * 0.4) * 5 + 6) + 'px';
+      miniWave.appendChild(wb);
+    }
+
+    audioM.addEventListener('loadedmetadata', () => {
+      timeDurM.textContent = fmtM(audioM.duration);
+    });
+
+    audioM.addEventListener('timeupdate', () => {
+      const pct = (audioM.currentTime / audioM.duration) * 100 || 0;
+      progressFillM.style.width = pct + '%';
+      timeCurM.textContent = fmtM(audioM.currentTime);
+
+      const wbars = miniWave.children;
+      const t = audioM.currentTime * 6;
+      for (let i = 0; i < wbars.length; i++) {
+        const val = Math.abs(Math.sin(t + i * 0.2) * 0.5 + Math.sin(t * 2.1 + i * 0.5) * 0.5);
+        wbars[i].style.height = Math.max(1, val * 14 + 1) + 'px';
+        wbars[i].style.opacity = 0.15 + val * 0.6;
+      }
+    });
+
+    progressBarM.addEventListener('click', (e) => {
+      const rect = progressBarM.getBoundingClientRect();
+      audioM.currentTime = ((e.clientX - rect.left) / rect.width) * audioM.duration;
+    });
+
+    function togglePlayM() {
+      if (audioM.paused) {
+        audioM.play();
+        playBtnM.textContent = '⏸';
+      } else {
+        audioM.pause();
+        playBtnM.textContent = '▶';
+      }
+    }
+
+    audioM.addEventListener('ended', () => {
+      playBtnM.textContent = '▶';
+    });
+  </script>
+</body>
+</html>
