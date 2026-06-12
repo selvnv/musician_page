@@ -609,25 +609,6 @@
     line-height: 1.5;
   }
 
-  /* ========== VIDEO SECTION ========== */
-  .video-container {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    overflow: hidden;
-    background: #000;
-    border: 1px solid var(--border);
-  }
-  .video-container video {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
-    object-fit: cover;
-    pointer-events: none;
-  }
-
   /* ========== WAVE SUPERPOSITION VIZ ========== */
   .wave-viz-container {
     position: relative;
@@ -834,7 +815,7 @@
 
       <div class="carousel-nav">
         <button class="carousel-arrow carousel-arrow-left" id="carouselPrev" aria-label="Предыдущий трек">←</button>
-        <span class="carousel-indicator" id="carouselIndicator">1 / 2</span>
+        <span class="carousel-indicator" id="carouselIndicator">1 / 12</span>
         <button class="carousel-arrow carousel-arrow-right" id="carouselNext" aria-label="Следующий трек">→</button>
       </div>
 
@@ -865,14 +846,6 @@
             </div>
           </div>
         </div>
-      </div>
-    </section>
-
-    <!-- VIDEO -->
-    <section class="section">
-      <div class="section-label">видео</div>
-      <div class="video-container">
-        <video src="../../videos/videofragment.mp4" autoplay muted loop playsinline></video>
       </div>
     </section>
 
@@ -961,10 +934,10 @@
     <section class="section">
       <div class="section-label">связь</div>
       <div class="contacts-row">
-        <a href="mailto:unlogic@example.com" class="contact-link">email</a>
-        <a href="#" class="contact-link">soundcloud</a>
-        <a href="#" class="contact-link">bandcamp</a>
-        <a href="#" class="contact-link">github</a>
+        <a href="mailto:selv.post@gmail.com" class="contact-link">email</a>
+        <a href="https://soundcloud.com/unlog-c?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing" class="contact-link">soundcloud</a>
+        <a href="https://www.youtube.com/@unlogic-sound" class="contact-link">youtube</a>
+        <a href="https://github.com/selvnv" class="contact-link">github</a>
       </div>
     </section>
 
@@ -990,6 +963,36 @@
   </audio>
   <audio id="audio1" preload="metadata" style="display:none;">
     <source src="../../audio/novel - Surrender.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="audio2" preload="metadata" style="display:none;">
+    <source src="../../audio/Bring Me To Life Remix.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="audio3" preload="metadata" style="display:none;">
+    <source src="../../audio/Bring Me To Life Remix Instrumental.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="audio4" preload="metadata" style="display:none;">
+    <source src="../../audio/Rain.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="audio5" preload="metadata" style="display:none;">
+    <source src="../../audio/1743.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="audio6" preload="metadata" style="display:none;">
+    <source src="../../audio/Crazy For Love.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="audio7" preload="metadata" style="display:none;">
+    <source src="../../audio/Crazy For Love Instrumental.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="audio8" preload="metadata" style="display:none;">
+    <source src="../../audio/Goodbye.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="audio9" preload="metadata" style="display:none;">
+    <source src="../../audio/Goodbye Instrumental.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="audio10" preload="metadata" style="display:none;">
+    <source src="../../audio/Temple.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="audio11" preload="metadata" style="display:none;">
+    <source src="../../audio/Change.mp3" type="audio/mpeg">
   </audio>
 
 <script>
@@ -1129,17 +1132,87 @@
     const tracks = [
       {
         title: 'Dark Ages',
-        meta: 'op. I · darkwave / orchestral',
+        meta: '11.06.2026 · darkwave / orchestral',
         cover: '../../images/Dark Ages Cover.png',
         audioId: 'audio0',
         trackName: 'Dark Ages — unlog!c'
       },
       {
+        title: 'Bring Me To Life Remix',
+        meta: '02.04.2026 · remix / rock / nu metal',
+        cover: '../../images/Bring Me To Life Remix Cover.png',
+        audioId: 'audio2',
+        trackName: 'Bring Me To Life Remix — unlog!c'
+      },
+      {
+        title: 'Bring Me To Life Remix Instrumental',
+        meta: '02.04.2026 · remix / rock / nu metal / instrumental',
+        cover: '../../images/Bring Me To Life Remix Cover.png',
+        audioId: 'audio3',
+        trackName: 'Bring Me To Life Remix Instrumental — unlog!c'
+      },
+      {
         title: 'Surrender',
-        meta: 'op. II · darkwave / orchestral · 2026',
+        meta: '13.10.2025 · experimental / darkwave / retrowave',
         cover: '../../images/Surrender Cover.png',
         audioId: 'audio1',
         trackName: 'Surrender — unlog!c'
+      },
+      {
+        title: 'Rain',
+        meta: '23.08.2025 · rock / nu metal / instrumental',
+        cover: '../../images/Rain Cover.png',
+        audioId: 'audio4',
+        trackName: 'Rain — unlog!c'
+      },
+      {
+        title: '1743',
+        meta: '03.08.2024 · electronic / experimental',
+        cover: '../../images/1743 Cover.png',
+        audioId: 'audio5',
+        trackName: '1743 — unlog!c'
+      },
+      {
+        title: 'Crazy For Love',
+        meta: '30.12.2023 · future bass / melodic drum and bass / experimental',
+        cover: '../../images/Crazy For Love Cover.png',
+        audioId: 'audio6',
+        trackName: 'Crazy For Love — unlog!c'
+      },
+      {
+        title: 'Crazy For Love Instrumental',
+        meta: '30.12.2023 · future bass / drum and bass / experimental / instrumental',
+        cover: '../../images/Crazy For Love Cover.png',
+        audioId: 'audio7',
+        trackName: 'Crazy For Love Instrumental — unlog!c'
+      },
+      {
+        title: 'Goodbye',
+        meta: '03.06.2023 · future bass',
+        cover: '../../images/Goodbye Cover.jpg',
+        audioId: 'audio8',
+        trackName: 'Goodbye — unlog!c'
+      },
+      {
+        title: 'Goodbye Instrumental',
+        meta: '03.06.2023 · future bass / instrumental',
+        cover: '../../images/Goodbye Cover.jpg',
+        audioId: 'audio9',
+        trackName: 'Goodbye Instrumental — unlog!c'
+      },
+      {
+        title: 'Temple',
+        meta: '07.02.2023 · future bass / instrumental',
+        cover: '../../images/Temple Cover.png',
+        audioId: 'audio10',
+        trackName: 'Temple — unlog!c'
+      },
+      {
+        title: 'Change',
+        meta: '05.08.2022 · electronic / experimental',
+        cover: '../../images/Change Cover.png',
+        audioId: 'audio11',
+        trackName: 'Change — unlog!c'
       }
     ];
 
@@ -1223,7 +1296,6 @@
     }
 
     currentAudio.volume = volumeSlider.value / 100;
-    document.getElementById('audio1').volume = volumeSlider.value / 100;
 
     progressBar.addEventListener('click', (e) => {
       const rect = progressBar.getBoundingClientRect();
