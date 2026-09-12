@@ -332,7 +332,6 @@
       currentAudio.pause();
       currentTrack = index;
       currentAudio.src = tracks[index].src;
-      currentAudio.load();
       currentAudio.volume = volumeSlider.value / 100;
 
       workCover.src = tracks[index].cover;
